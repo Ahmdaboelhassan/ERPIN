@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\Accounting\" />
+    <Folder Include="Controllers\Auth\" />
+    <Folder Include="Controllers\Sales\" />
+    <Folder Include="Controllers\Purchases\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ERPIN.Accounting\ERPIN.Accounting.csproj" />
+    <ProjectReference Include="..\ERPIN.Auth\ERPIN.Auth.csproj" />
+    <ProjectReference Include="..\ERPIN.Inventory\ERPIN.Inventory.csproj" />
+    <ProjectReference Include="..\ERPIN.Purchases\ERPIN.Purchases.csproj" />
+    <ProjectReference Include="..\ERPIN.Shared\ERPIN.Shared.csproj" />
+    <ProjectReference Include="..\ERPN.Sales\ERPIN.Sales.csproj" />
+  </ItemGroup>
+
+</Project>

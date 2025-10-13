@@ -1,0 +1,6 @@
+@ERPIN_HostAddress = http://localhost:5185
+
+GET {{ERPIN_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
