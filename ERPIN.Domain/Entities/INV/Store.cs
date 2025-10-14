@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ERPIN.Domain.Entities.INV;
 
 [Table("Stores", Schema = nameof(Schemes.INV))]
-public class Store : BaseEntity
+public class Store : BaseNamedEntity
 {
     public int PurchaseAccountId { get; set; }
     public int SalesAccountId { get; set; }

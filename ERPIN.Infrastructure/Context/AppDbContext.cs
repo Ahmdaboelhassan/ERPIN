@@ -11,19 +11,28 @@ using Microsoft.EntityFrameworkCore;
 namespace ERPIN.Infrastructure.Context;
 public class AppDbContext : IdentityDbContext
 {
+    #region FI
     public DbSet<Account> Accounts { get; set; }
     public DbSet<CostCenter> CostCenters { get; set; }
     public DbSet<Drawer> Drawers { get; set; }
+    #endregion
+    #region INV
     public DbSet<Item> Items { get; set; }
     public DbSet<Store> Stores { get; set; }
+    public DbSet<ItemStore> ItemStores { get; set; }
+    #endregion
+    #region PR
     public DbSet<PrInvoice> PrInvoices { get; set; }
     public DbSet<PrInvoiceDetail> PrInvoiceDetails { get; set; }
     public DbSet<PrReturn> PrReturns { get; set; }
     public DbSet<PrReturnDetail> PrReturnsDetails { get; set; }
+    #endregion
+    #region SL
     public DbSet<SlInvoice> SlInvoices { get; set; }
     public DbSet<SlInvoiceDetail> SlInvoiceDetails { get; set; }
     public DbSet<SlReturn> SlReturns { get; set; }
     public DbSet<SlReturnDetail> SlReturnsDetails { get; set; }
+    #endregion
     public DbSet<Settings> Settings { get; set; }
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -41,3 +50,6 @@ public class AppDbContext : IdentityDbContext
         modelBuilder.Entity<IdentityUserToken<string>>().ToTable("UserTokens", "AUTH");
     }
 }
+
+
+

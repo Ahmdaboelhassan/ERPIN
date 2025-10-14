@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace ERPIN.Domain.BaseModels;
-public class BaseEntity : IBaseEntity, INameEntity
+public class BaseNamedEntity : IBaseEntity, INameEntity
 {
     [Key]
     public int Id { get ; set ; }

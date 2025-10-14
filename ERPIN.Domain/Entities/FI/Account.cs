@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ERPIN.Domain.Entities.FI;
 
 [Table("Accounts", Schema = nameof(Schemes.FI))]
-public class Account : BaseEntity
+public class Account : BaseNamedEntity
 {
     public required string Number { get; set; }
     public string? Description { get; set; }

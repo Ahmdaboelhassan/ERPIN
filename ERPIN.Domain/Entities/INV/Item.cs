@@ -5,8 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ERPIN.Domain.Entities.INV;
 
 [Table("Items", Schema = nameof(Schemes.INV))]
-
-public class Item : BaseEntity
+public class Item : BaseNamedEntity
 {
     public required string BarCode { get; set; }
     public string? Description { get; set; }

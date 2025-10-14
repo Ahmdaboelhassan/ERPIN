@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ERPIN.Domain.Entities.FI;
 
 [Table("Drawers", Schema = nameof(Schemes.FI))]
-public class Drawer : BaseEntity
+public class Drawer : BaseNamedEntity
 {
     public required int AccountId { get; set; }
 
