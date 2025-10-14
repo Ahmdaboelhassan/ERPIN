@@ -1,6 +1,6 @@
 ﻿using ERPIN.Domain.IRepositories;
+using ERPIN.Services.Config;
 using ERPIN.Services.DTOs.Response;
-using ERPIN.Services.IOptionSettings;
 using ERPIN.Services.IServices.Auth;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Extensions.Options;

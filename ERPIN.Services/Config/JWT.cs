@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERPIN.Services.IOptionSettings;
+namespace ERPIN.Services.Config;
 public class JWT
 {
     public string Key { get; set; }

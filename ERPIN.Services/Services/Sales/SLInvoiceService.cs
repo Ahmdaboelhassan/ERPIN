@@ -4,6 +4,7 @@ using ERPIN.Services.DTOs.Request;
 using ERPIN.Services.DTOs.Response;
 using ERPIN.Services.IServices.Sales;
 using ERPIN.Services.IServices.Shared;
+using MapsterMapper;
 using System.Threading.Tasks;
 
 namespace ERPIN.Services.Services.Sales;
@@ -11,11 +12,13 @@ public class SLInvoiceService : ISLInvoiceService
 {
     private IUserLogService _userLogService;
     private IUnitOfWork _unitOfWork;
+    private IMapper _mapper;
 
-    public SLInvoiceService(IUserLogService userLogService, IUnitOfWork unitOfWork)
+    public SLInvoiceService(IUserLogService userLogService, IUnitOfWork unitOfWork, IMapper mapper)
     {
         _userLogService = userLogService;
         _unitOfWork = unitOfWork;
+        _mapper = mapper;
     }
 
     public async Task<ResultResponse<CreateSLReturn>> NewInvoice() {
@@ -30,13 +33,15 @@ public class SLInvoiceService : ISLInvoiceService
 
         return Result.Success(model);
     }
-    public async Task<ResultResponse<SlInvoice>> GetInvoice(int id)
+    public async Task<ResultResponse<SLInvoiceResponse>> GetInvoice(int id)
     {
         var invoice = await _unitOfWork.SlInvoices.Get(id);
         if (invoice == null)
-            return Result.Error<SlInvoice>("Invoice not found");
+            return Result.Error<SLInvoiceResponse>("Invoice not found");
 
-        return Result.Success(invoice);
+        var invoiceRes = _mapper.Map<SLInvoiceResponse>(invoice);
+
+        return Result.Success(invoiceRes);
     }
 
     public ResultResponse<int> CreateInvoice(CreateSLReturn model)
