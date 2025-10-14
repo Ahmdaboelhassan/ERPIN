@@ -1,6 +1,6 @@
-﻿using ERPIN.Domain.DTOs.Repsonse;
-using ERPIN.Domain.DTOs.Request;
-using ERPIN.Domain.IRepositories;
+﻿using ERPIN.Domain.IRepositories;
+using ERPIN.Services.DTOs.Request;
+using ERPIN.Services.DTOs.Response;
 using ERPIN.Services.IServices.Auth;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;

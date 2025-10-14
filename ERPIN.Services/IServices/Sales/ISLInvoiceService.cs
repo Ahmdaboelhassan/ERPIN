@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERPIN.Services.IServices.Purchases;
-internal interface IPRReturn
+namespace ERPIN.Services.IServices.Sales;
+internal interface ISLInvoiceService
 {
 }

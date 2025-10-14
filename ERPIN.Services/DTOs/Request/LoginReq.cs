@@ -1,4 +1,4 @@
-﻿namespace ERPIN.Domain.DTOs.Request;
+﻿namespace ERPIN.Services.DTOs.Request;
 public class LoginReq
 {
     public string UserName { get; set; }

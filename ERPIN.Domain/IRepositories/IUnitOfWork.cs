@@ -1,22 +1,24 @@
 ﻿using ERPIN.Domain.Entities.INV;
 using ERPIN.Domain.Entities.PR;
 using ERPIN.Domain.Entities.SL;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace ERPIN.Domain.IRepositories;
 public interface IUnitOfWork : IDisposable
 {
-    public IItemRepository Item  { get; }
-    public IStoreRepository Store {get; }
-    public IItemStoreRepository ItemStore {get; }
-    public IPrInvoiceRepository PrInvoice {get; }
-    public IPrInvoiceDetailRepository PrInvoiceDetail {get; }
-    public IPrReturnRepository PrReturn {get; }
-    public IPrReturnDetailRepository PrReturnDetail {get; }
-    public ISlInvoiceRepository SlInvoice {get; }
-    public ISlInvoiceDetailRepository SlInvoiceDetail {get; }
-    public ISlReturnRepository SlReturn {get; }
-    public ISlReturnDetailRepository SlReturnDetail { get;  }
+    public IItemRepository Items { get; }
+    public IStoreRepository Stores {get; }
+    public IItemStoreRepository ItemStores {get; }
+    public IPrInvoiceRepository PrInvoices {get; }
+    public IPrInvoiceDetailRepository PrInvoiceDetails {get; }
+    public IPrReturnRepository PrReturns {get; }
+    public IPrReturnDetailRepository PrReturnDetails {get; }
+    public ISlInvoiceRepository SlInvoices {get; }
+    public ISlInvoiceDetailRepository SlInvoiceDetails {get; }
+    public ISlReturnRepository SlReturns {get; }
+    public ISlReturnDetailRepository SlReturnDetails { get; }
+    public IUserLogRepository UserLogs { get; }
     Task<int> SaveChangesAsync();
     IDbTransaction StartTransaction();
 }

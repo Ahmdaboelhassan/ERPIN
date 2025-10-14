@@ -1,4 +1,4 @@
-﻿namespace ERPIN.Domain.DTOs.Repsonse;
+﻿namespace ERPIN.Services.DTOs.Response;
 public static class Result
 {
     public static ResultResponse<T> Error<T>(string message)

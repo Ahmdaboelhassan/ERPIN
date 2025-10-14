@@ -8,7 +8,7 @@ public static class DependencyInjection
     public static IServiceCollection AddServicesLayer(this IServiceCollection services , IConfiguration config)
     {
         services.Configure<JWT>(config.GetSection("JWT"));
-
+        
         return services;
     }
 }

@@ -12,27 +12,28 @@ public class UnitOfWork : IUnitOfWork
     {
         _context = context;
     }
-    public IItemRepository Item => new ItemRepository(_context);
+    public IItemRepository Items => new ItemRepository(_context);
 
-    public IStoreRepository Store => new StoreRepository(_context);
+    public IStoreRepository Stores => new StoreRepository(_context);
 
-    public IItemStoreRepository ItemStore => new ItemStoreRepository(_context);
+    public IItemStoreRepository ItemStores=> new ItemStoreRepository(_context);
 
-    public IPrInvoiceRepository PrInvoice => new PrInvoiceRepository(_context);
+    public IPrInvoiceRepository PrInvoices => new PrInvoiceRepository(_context);
 
-    public IPrInvoiceDetailRepository PrInvoiceDetail => new PrInvoiceDetailRepository(_context);
+    public IPrInvoiceDetailRepository PrInvoiceDetails => new PrInvoiceDetailRepository(_context);
 
-    public IPrReturnRepository PrReturn => new PrReturnRepository(_context);
+    public IPrReturnRepository PrReturns => new PrReturnRepository(_context);
 
-    public IPrReturnDetailRepository PrReturnDetail => new PrReturnDetailRepository(_context);
+    public IPrReturnDetailRepository PrReturnDetails => new PrReturnDetailRepository(_context);
 
-    public ISlInvoiceRepository SlInvoice => new SlInvoiceRepository(_context);
+    public ISlInvoiceRepository SlInvoices => new SlInvoiceRepository(_context);
 
-    public ISlInvoiceDetailRepository SlInvoiceDetail => new SlInvoiceDetailRepository(_context);
+    public ISlInvoiceDetailRepository SlInvoiceDetails => new SlInvoiceDetailRepository(_context);
 
-    public ISlReturnRepository SlReturn => new SlReturnRepository(_context);
+    public ISlReturnRepository SlReturns => new SlReturnRepository(_context);
 
-    public ISlReturnDetailRepository SlReturnDetail => new SlReturnDetailRepository(_context);
+    public ISlReturnDetailRepository SlReturnDetails => new SlReturnDetailRepository(_context);
+    public IUserLogRepository UserLogs => new UserLogRepository(_context);
 
     public void Dispose()
     {

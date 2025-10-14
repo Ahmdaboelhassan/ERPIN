@@ -1,5 +1,5 @@
-﻿using ERPIN.Domain.DTOs.Repsonse;
-using ERPIN.Domain.DTOs.Request;
+﻿using ERPIN.Services.DTOs.Request;
+using ERPIN.Services.DTOs.Response;
 
 namespace ERPIN.Services.IServices.Auth;
 public interface IAuthService

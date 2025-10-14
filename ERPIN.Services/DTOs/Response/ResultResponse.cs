@@ -1,4 +1,4 @@
-﻿namespace ERPIN.Domain.DTOs.Repsonse;
+﻿namespace ERPIN.Services.DTOs.Response;
 public record ResultResponse<T>
 {
     public bool IsSuccess { get; set; }

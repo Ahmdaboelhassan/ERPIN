@@ -1,4 +1,4 @@
-﻿namespace ERPIN.Domain.DTOs.Repsonse;
+﻿namespace ERPIN.Services.DTOs.Response;
 public record RefreshTokenResponse
 {
     public string RefreshToken { get; set; }

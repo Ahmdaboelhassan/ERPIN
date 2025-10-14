@@ -1,4 +1,4 @@
-﻿using ERPIN.Domain.DTOs.Repsonse;
+﻿using ERPIN.Services.DTOs.Response;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.IdentityModel.Tokens.Jwt;
 

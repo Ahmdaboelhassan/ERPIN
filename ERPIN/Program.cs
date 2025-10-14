@@ -11,6 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 // Add Modules
+builder.Services.AddHttpContextAccessor();
 
 builder.Services
     .AddDomainLayer(builder.Configuration)
