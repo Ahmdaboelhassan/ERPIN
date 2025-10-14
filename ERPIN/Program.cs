@@ -1,9 +1,6 @@
-using ERPIN.Accounting;
-using ERPIN.Auth;
-using ERPIN.Inventory;
-using ERPIN.Purchases;
-using ERPIN.Sales;
-using ERPIN.Shared;
+using ERPIN.Domain; 
+using ERPIN.Infrastructure; 
+using ERPIN.Services; 
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,12 +13,10 @@ builder.Services.AddOpenApi();
 // Add Modules
 
 builder.Services
-    .AddAccountingModule(builder.Configuration)
-    .AddAuthModule(builder.Configuration)
-    .AddInventoryModule(builder.Configuration)
-    .AddPurchasesModule(builder.Configuration)
-    .AddSalesModule(builder.Configuration)
-    .AddSharedModule(builder.Configuration);
+    .AddDomainLayer(builder.Configuration)
+    .AddInfrastructureLayer(builder.Configuration)
+    .AddServicesLayer(builder.Configuration);
+        
 
 var app = builder.Build();
 

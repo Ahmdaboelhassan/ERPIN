@@ -22,12 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ERPIN.Accounting\ERPIN.Accounting.csproj" />
-    <ProjectReference Include="..\ERPIN.Auth\ERPIN.Auth.csproj" />
-    <ProjectReference Include="..\ERPIN.Inventory\ERPIN.Inventory.csproj" />
-    <ProjectReference Include="..\ERPIN.Purchases\ERPIN.Purchases.csproj" />
-    <ProjectReference Include="..\ERPIN.Shared\ERPIN.Shared.csproj" />
-    <ProjectReference Include="..\ERPN.Sales\ERPIN.Sales.csproj" />
+    <ProjectReference Include="..\ERPIN.Domain\ERPIN.Domain.csproj" />
+    <ProjectReference Include="..\ERPIN.Infrastructure\ERPIN.Infrastructure.csproj" />
+    <ProjectReference Include="..\ERPIN.Services\ERPIN.Services.csproj" />
   </ItemGroup>
 
 </Project>
