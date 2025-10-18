@@ -1,6 +1,6 @@
 ﻿using ERPIN.Domain.Entities.PR;
 
 namespace ERPIN.Domain.IRepositories;
-public interface IPrReturnRepository : IRepository<PrReturn>
+public interface IPrReturnRepository : IRepository<PRReturn>
 {
 }

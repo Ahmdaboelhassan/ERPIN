@@ -1,6 +1,6 @@
 ﻿using ERPIN.Domain.Entities.SL;
 
 namespace ERPIN.Domain.IRepositories;
-public interface ISlReturnRepository : IRepository<SLReturn>
+public interface ICustomerRepository : IRepository<Customer>
 {
 }

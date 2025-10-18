@@ -14,4 +14,5 @@ public class InvoiceDetailEntity : IInvoiceDetailEntity
     public decimal TotalPrice { get ; set ; }
     public string? Description { get ; set ; }
     public int InvoiceId { get; set; }
+    public bool IsDeleted { get; set; }
 }

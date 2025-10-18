@@ -6,6 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ERPIN.Domain.IRepositories;
-public interface ISlInvoiceRepository : IRepository<SlInvoice>
+public interface ISlInvoiceRepository : IRepository<SLInvoice>
 {
 }

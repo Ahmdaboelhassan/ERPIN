@@ -1,5 +1,5 @@
 ﻿namespace ERPIN.Domain.Enums;
-public enum Action
+public enum UserAction
 {
     Create = 1,
     Update = 2 ,

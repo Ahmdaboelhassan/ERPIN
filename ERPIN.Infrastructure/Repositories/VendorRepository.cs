@@ -3,10 +3,9 @@ using ERPIN.Domain.IRepositories;
 using ERPIN.Infrastructure.Context;
 
 namespace ERPIN.Infrastructure.Repositories;
-public class PrReturnRepository : Repository<PRReturn>, IPrReturnRepository
+public class VendorRepository : Repository<Vendor>, IVendorRepository
 {
-    public PrReturnRepository(AppDbContext context) : base(context)
+    public VendorRepository(AppDbContext context) : base(context)
     {
     }
-
 }

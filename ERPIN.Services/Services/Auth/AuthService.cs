@@ -1,21 +1,27 @@
-﻿using ERPIN.Domain.IRepositories;
+﻿using ERPIN.Domain.Entities.AUTH;
 using ERPIN.Services.DTOs.Request;
 using ERPIN.Services.DTOs.Response;
-using ERPIN.Services.IServices.Auth;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNetCore.Identity;
 using System.IdentityModel.Tokens.Jwt;
 
+
 namespace ERPIN.Services.Services.Auth;
+public interface IAuthService
+{
+    public Task<ResultResponse<AuthResponse>> Login(LoginReq model);
+    public Task<ResultResponse<AuthResponse>> Register(LoginReq model);
+    public Task<AuthResponse> RefreshToken(string? token);
+}
+
+
 public class AuthService : IAuthService
 {
     private readonly ITokenService _tokenService;
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly IUnitOfWork _unitOfWork;
-    public AuthService(ITokenService tokenService, IUnitOfWork unitOfWork, UserManager<IdentityUser> userManager)
+    private readonly UserManager<AppUser> _userManager;
+   
+    public AuthService(ITokenService tokenService,UserManager<AppUser> userManager)
     {
         _tokenService = tokenService;
-        _unitOfWork = unitOfWork;
         _userManager = userManager;
     }
 
@@ -63,14 +69,14 @@ public class AuthService : IAuthService
             return Result.Error<AuthResponse>("Invalid Username");
 
 
-        var newUser = new IdentityUser
+        var newUser = new AppUser
         {
            UserName = model.UserName,
         };
 
         var createUser = await _userManager.CreateAsync(newUser, model.Password);
         if (!createUser.Succeeded)
-            return Result.Error<AuthResponse>(createUser.Errors.First());
+            return Result.Error<AuthResponse>(createUser.Errors.First().Code);
 
 
         var token = _tokenService.CreateToken(newUser);

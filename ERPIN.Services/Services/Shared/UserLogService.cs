@@ -1,12 +1,17 @@
 ﻿using ERPIN.Domain.Entities.SH;
 using ERPIN.Domain.IRepositories;
 using ERPIN.Services.Extinctions;
-using ERPIN.Services.IServices.Shared;
 using ERPIN.Services.Models;
 using Microsoft.AspNetCore.Http;
 
 
 namespace ERPIN.Services.Services.Shared;
+
+public interface IUserLogService
+{
+    Task LogUserActivityAsync(CreateUserLog userlog);
+}
+
 public class UserLogService : IUserLogService
 {
     private readonly IUnitOfWork _unitOfWork;

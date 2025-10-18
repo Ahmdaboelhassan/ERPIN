@@ -5,9 +5,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERPIN.Domain.Entities.PR;
 
-[Table("PrInvoices", Schema = nameof(Schemes.PR))]
+[Table("PRInvoices", Schema = nameof(Schemes.PR))]
 
-public class PrInvoice : InvoiceEntity
+public class PRInvoice : InvoiceEntity
 {
     public int VendorId { get; set; }
 
@@ -16,6 +16,6 @@ public class PrInvoice : InvoiceEntity
 
     [ForeignKey(nameof(StoreId))]
     public Store Store { get; set; }
-    public ICollection<PrInvoiceDetail> invoiceDetails { get; set; }
+    public ICollection<PRInvoiceDetail> InvoiceDetails { get; set; }
 
 }

@@ -1,6 +1,5 @@
 ﻿using ERPIN.Domain.IRepositories;
 using ERPIN.Infrastructure.Context;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Data;
 
@@ -18,27 +17,26 @@ public class UnitOfWork : IUnitOfWork
 
     public IItemStoreRepository ItemStores=> new ItemStoreRepository(_context);
 
-    public IPrInvoiceRepository PrInvoices => new PrInvoiceRepository(_context);
+    public IPrInvoiceRepository PRInvoices => new PrInvoiceRepository(_context);
 
-    public IPrInvoiceDetailRepository PrInvoiceDetails => new PrInvoiceDetailRepository(_context);
+    public IPrInvoiceDetailRepository PRInvoiceDetails => new PrInvoiceDetailRepository(_context);
 
-    public IPrReturnRepository PrReturns => new PrReturnRepository(_context);
+    public IPrReturnRepository PRReturns => new PrReturnRepository(_context);
 
-    public IPrReturnDetailRepository PrReturnDetails => new PrReturnDetailRepository(_context);
+    public IPrReturnDetailRepository PRReturnDetails => new PrReturnDetailRepository(_context);
 
-    public ISlInvoiceRepository SlInvoices => new SlInvoiceRepository(_context);
+    public ISlInvoiceRepository SLInvoices => new SlInvoiceRepository(_context);
 
-    public ISlInvoiceDetailRepository SlInvoiceDetails => new SlInvoiceDetailRepository(_context);
+    public ISlInvoiceDetailRepository SLInvoiceDetails => new SlInvoiceDetailRepository(_context);
 
-    public ISlReturnRepository SlReturns => new SlReturnRepository(_context);
+    public ISlReturnRepository SLReturns => new SlReturnRepository(_context);
 
-    public ISlReturnDetailRepository SlReturnDetails => new SlReturnDetailRepository(_context);
+    public ISlReturnDetailRepository SLReturnDetails => new SlReturnDetailRepository(_context);
     public IUserLogRepository UserLogs => new UserLogRepository(_context);
 
-    public void Dispose()
-    {
-       _context.Dispose();
-    }
+    public ICustomerRepository Customers => new CustomerRepository(_context);
+
+    public IVendorRepository Vendors => new VendorRepository(_context);
 
     public async Task<int> SaveChangesAsync()
     {
@@ -50,4 +48,10 @@ public class UnitOfWork : IUnitOfWork
         var transaction = _context.Database.BeginTransaction();
         return transaction.GetDbTransaction();
     }
+    public void Dispose()
+    {
+       _context.Dispose();
+    }
+
+    
 }

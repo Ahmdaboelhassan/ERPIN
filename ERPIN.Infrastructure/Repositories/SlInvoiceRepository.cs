@@ -3,7 +3,7 @@ using ERPIN.Domain.IRepositories;
 using ERPIN.Infrastructure.Context;
 
 namespace ERPIN.Infrastructure.Repositories;
-public class SlInvoiceRepository : Repository<SlInvoice>, ISlInvoiceRepository
+public class SlInvoiceRepository : Repository<SLInvoice>, ISlInvoiceRepository
 {
     public SlInvoiceRepository(AppDbContext context) : base(context)
     {

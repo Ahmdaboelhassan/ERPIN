@@ -3,10 +3,9 @@ using ERPIN.Domain.IRepositories;
 using ERPIN.Infrastructure.Context;
 
 namespace ERPIN.Infrastructure.Repositories;
-public class SlReturnRepository : Repository<SLReturn>, ISlReturnRepository
+public class CustomerRepository : Repository<Customer>, ICustomerRepository
 {
-    public SlReturnRepository(AppDbContext context) : base(context)
+    public CustomerRepository(AppDbContext context) : base(context)
     {
     }
-
 }

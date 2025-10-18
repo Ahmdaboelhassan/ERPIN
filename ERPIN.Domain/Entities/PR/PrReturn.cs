@@ -5,13 +5,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERPIN.Domain.Entities.PR;
 
-[Table("PrReturns", Schema = nameof(Schemes.PR))]
-public class PrReturn : InvoiceEntity
+[Table("PRReturns", Schema = nameof(Schemes.PR))]
+public class PRReturn : InvoiceEntity
 {
     [ForeignKey(nameof(VendorId))]
     public int VendorId { get; set; }
 
     [ForeignKey(nameof(StoreId))]
     public Store Store { get; set; }
-    public ICollection<PrReturnDetail> ReturnDetails { get; set; }
+    public ICollection<PRReturnDetail> ReturnDetails { get; set; }
 }

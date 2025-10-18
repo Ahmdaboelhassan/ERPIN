@@ -1,8 +1,8 @@
-﻿using ERPIN.Domain.IRepositories;
+﻿using ERPIN.Domain.Entities.AUTH;
+using ERPIN.Domain.IRepositories;
 using ERPIN.Services.Config;
 using ERPIN.Services.DTOs.Response;
-using ERPIN.Services.IServices.Auth;
-using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,19 +10,22 @@ using System.Security.Claims;
 using System.Text;
 
 namespace ERPIN.Services.Services.Auth;
+
+public interface ITokenService
+{
+    JwtSecurityToken? CreateToken(AppUser user);
+    Task<RefreshTokenResponse> CreateRefreshToken(AppUser user);
+}
+
 public class TokenService : ITokenService
 {
     private readonly JWT _jwt;
-    private readonly IUnitOfWork _unitOfWork;
     public TokenService(IOptions<JWT> jwt, IUnitOfWork unitOfWork)
     {
         _jwt = jwt.Value;
-        _unitOfWork = unitOfWork;
     }
 
-
-
-    public JwtSecurityToken? CreateToken(IdentityUser user)
+    public JwtSecurityToken? CreateToken(AppUser user)
     {
         var claims = new[]
         {
@@ -46,7 +49,7 @@ public class TokenService : ITokenService
             signingCredentials: signingCredentials);
     }
 
-    public async Task<RefreshTokenResponse> CreateRefreshToken(IdentityUser user)
+    public async Task<RefreshTokenResponse> CreateRefreshToken(AppUser user)
     {
         //var randomNumber = new byte[32];
         //using (var rng = RandomNumberGenerator.Create())

@@ -1,6 +1,10 @@
 ﻿using ERPIN.Services.Config;
+using ERPIN.Services.Services.Auth;
+using ERPIN.Services.Services.Sales;
+using ERPIN.Services.Services.Shared;
 using Mapster;
 using MapsterMapper;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -16,6 +20,12 @@ public static class DependencyInjection
         mapConfig.Scan(Assembly.GetExecutingAssembly());
         services.AddSingleton(mapConfig);
         services.AddScoped<IMapper, ServiceMapper>();
+
+        // Map Services 
+        services.AddScoped<IUserLogService , UserLogService>();
+        services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<ISLInvoiceService, SLInvoiceService>();
 
         return services;
     }

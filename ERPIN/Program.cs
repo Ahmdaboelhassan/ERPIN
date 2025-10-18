@@ -1,14 +1,21 @@
-using ERPIN.Domain; 
-using ERPIN.Infrastructure; 
-using ERPIN.Services; 
+using Asp.Versioning;
+using ERPIN.Domain;
+using ERPIN.Infrastructure;
+using ERPIN.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+    options.ApiVersionReader = new UrlSegmentApiVersionReader();
+});
 
 // Add Modules
 builder.Services.AddHttpContextAccessor();
@@ -21,16 +28,14 @@ builder.Services
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapGet("/ping", () => Results.Ok("App Is Running...."));
 
 app.Run();

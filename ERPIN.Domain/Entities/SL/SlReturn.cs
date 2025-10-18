@@ -4,8 +4,8 @@ using ERPIN.Domain.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERPIN.Domain.Entities.SL;
-[Table("SlReturns", Schema = nameof(Schemes.SL))]
-public class SlReturn : InvoiceEntity
+[Table("SLReturns", Schema = nameof(Schemes.SL))]
+public class SLReturn : InvoiceEntity
 {
     public int CustomerId { get; set; }
 
@@ -15,5 +15,5 @@ public class SlReturn : InvoiceEntity
     [ForeignKey(nameof(StoreId))]
     public Store Store { get; set; }
 
-    public List<SlInvoiceDetail> InvoiceDetail { get; set; }
+    public List<SLReturnDetail> InvoiceDetails { get; set; }
 }

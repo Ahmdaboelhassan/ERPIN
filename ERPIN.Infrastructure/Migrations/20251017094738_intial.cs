@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ERPIN.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class intial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -28,6 +28,9 @@ namespace ERPIN.Infrastructure.Migrations
 
             migrationBuilder.EnsureSchema(
                 name: "ST");
+
+            migrationBuilder.EnsureSchema(
+                name: "SH");
 
             migrationBuilder.CreateTable(
                 name: "Accounts",
@@ -113,7 +116,7 @@ namespace ERPIN.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    BarCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BarCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UOM = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PurchasePrice = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
@@ -136,11 +139,33 @@ namespace ERPIN.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ItemStores",
+                schema: "INV",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ItemId = table.Column<int>(type: "int", nullable: false),
+                    StoreId = table.Column<int>(type: "int", nullable: true),
+                    ProcessId = table.Column<int>(type: "int", nullable: false),
+                    SourceId = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: true),
+                    InTrns = table.Column<bool>(type: "bit", nullable: false),
+                    TotalCost = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ItemStores", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Roles",
                 schema: "AUTH",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -161,29 +186,6 @@ namespace ERPIN.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Settings", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "SlReturnDetails",
-                schema: "SL",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ItemId = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    UnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    DiscountRation1 = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    DiscountRation2 = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    DiscountRation3 = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    DiscountValue = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    InvoiceId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SlReturnDetails", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -215,11 +217,31 @@ namespace ERPIN.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserLogs",
+                schema: "SH",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Process = table.Column<int>(type: "int", nullable: false),
+                    Action = table.Column<int>(type: "int", nullable: false),
+                    Time = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserLogs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 schema: "AUTH",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -295,30 +317,7 @@ namespace ERPIN.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RoleClaims",
-                schema: "AUTH",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RoleClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_RoleClaims_Roles_RoleId",
-                        column: x => x.RoleId,
-                        principalSchema: "AUTH",
-                        principalTable: "Roles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PrReturns",
+                name: "PRReturns",
                 schema: "PR",
                 columns: table => new
                 {
@@ -345,9 +344,9 @@ namespace ERPIN.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PrReturns", x => x.Id);
+                    table.PrimaryKey("PK_PRReturns", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PrReturns_Stores_StoreId",
+                        name: "FK_PRReturns_Stores_StoreId",
                         column: x => x.StoreId,
                         principalSchema: "INV",
                         principalTable: "Stores",
@@ -355,7 +354,7 @@ namespace ERPIN.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SlInvoices",
+                name: "SLInvoices",
                 schema: "SL",
                 columns: table => new
                 {
@@ -382,16 +381,16 @@ namespace ERPIN.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SlInvoices", x => x.Id);
+                    table.PrimaryKey("PK_SLInvoices", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SlInvoices_Customers_CustomerId",
+                        name: "FK_SLInvoices_Customers_CustomerId",
                         column: x => x.CustomerId,
                         principalSchema: "SL",
                         principalTable: "Customers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SlInvoices_Stores_StoreId",
+                        name: "FK_SLInvoices_Stores_StoreId",
                         column: x => x.StoreId,
                         principalSchema: "INV",
                         principalTable: "Stores",
@@ -399,7 +398,7 @@ namespace ERPIN.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SlReturns",
+                name: "SLReturns",
                 schema: "SL",
                 columns: table => new
                 {
@@ -426,65 +425,20 @@ namespace ERPIN.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SlReturns", x => x.Id);
+                    table.PrimaryKey("PK_SLReturns", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SlReturns_Customers_CustomerId",
+                        name: "FK_SLReturns_Customers_CustomerId",
                         column: x => x.CustomerId,
                         principalSchema: "SL",
                         principalTable: "Customers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SlReturns_Stores_StoreId",
+                        name: "FK_SLReturns_Stores_StoreId",
                         column: x => x.StoreId,
                         principalSchema: "INV",
                         principalTable: "Stores",
                         principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserClaims",
-                schema: "AUTH",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserClaims_Users_UserId",
-                        column: x => x.UserId,
-                        principalSchema: "AUTH",
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserLogins",
-                schema: "AUTH",
-                columns: table => new
-                {
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserLogins", x => new { x.LoginProvider, x.ProviderKey });
-                    table.ForeignKey(
-                        name: "FK_UserLogins_Users_UserId",
-                        column: x => x.UserId,
-                        principalSchema: "AUTH",
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -492,8 +446,8 @@ namespace ERPIN.Infrastructure.Migrations
                 schema: "AUTH",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -515,29 +469,7 @@ namespace ERPIN.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserTokens",
-                schema: "AUTH",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
-                    table.ForeignKey(
-                        name: "FK_UserTokens_Users_UserId",
-                        column: x => x.UserId,
-                        principalSchema: "AUTH",
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PrInvoices",
+                name: "PRInvoices",
                 schema: "PR",
                 columns: table => new
                 {
@@ -564,15 +496,15 @@ namespace ERPIN.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PrInvoices", x => x.Id);
+                    table.PrimaryKey("PK_PRInvoices", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PrInvoices_Stores_StoreId",
+                        name: "FK_PRInvoices_Stores_StoreId",
                         column: x => x.StoreId,
                         principalSchema: "INV",
                         principalTable: "Stores",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_PrInvoices_Vendors_VendorId",
+                        name: "FK_PRInvoices_Vendors_VendorId",
                         column: x => x.VendorId,
                         principalSchema: "PR",
                         principalTable: "Vendors",
@@ -581,7 +513,7 @@ namespace ERPIN.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PrReturnDetails",
+                name: "PRReturnDetails",
                 schema: "PR",
                 columns: table => new
                 {
@@ -596,36 +528,36 @@ namespace ERPIN.Infrastructure.Migrations
                     DiscountValue = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    InvoiceId = table.Column<int>(type: "int", nullable: false)
+                    InvoiceId = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PrReturnDetails", x => x.Id);
+                    table.PrimaryKey("PK_PRReturnDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PrReturnDetails_Items_ItemId",
+                        name: "FK_PRReturnDetails_Items_ItemId",
                         column: x => x.ItemId,
                         principalSchema: "INV",
                         principalTable: "Items",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PrReturnDetails_PrReturns_InvoiceId",
+                        name: "FK_PRReturnDetails_PRReturns_InvoiceId",
                         column: x => x.InvoiceId,
                         principalSchema: "PR",
-                        principalTable: "PrReturns",
+                        principalTable: "PRReturns",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "SlInvoiceDetails",
+                name: "SLInvoiceDetails",
                 schema: "SL",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SlInvoiceId = table.Column<int>(type: "int", nullable: true),
-                    SlReturnId = table.Column<int>(type: "int", nullable: true),
+                    SLReturnId = table.Column<int>(type: "int", nullable: true),
                     ItemId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     UnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -635,27 +567,74 @@ namespace ERPIN.Infrastructure.Migrations
                     DiscountValue = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    InvoiceId = table.Column<int>(type: "int", nullable: false)
+                    InvoiceId = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SlInvoiceDetails", x => x.Id);
+                    table.PrimaryKey("PK_SLInvoiceDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SlInvoiceDetails_SlInvoices_SlInvoiceId",
-                        column: x => x.SlInvoiceId,
-                        principalSchema: "SL",
-                        principalTable: "SlInvoices",
-                        principalColumn: "Id");
+                        name: "FK_SLInvoiceDetails_Items_ItemId",
+                        column: x => x.ItemId,
+                        principalSchema: "INV",
+                        principalTable: "Items",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SlInvoiceDetails_SlReturns_SlReturnId",
-                        column: x => x.SlReturnId,
+                        name: "FK_SLInvoiceDetails_SLInvoices_InvoiceId",
+                        column: x => x.InvoiceId,
                         principalSchema: "SL",
-                        principalTable: "SlReturns",
+                        principalTable: "SLInvoices",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SLInvoiceDetails_SLReturns_SLReturnId",
+                        column: x => x.SLReturnId,
+                        principalSchema: "SL",
+                        principalTable: "SLReturns",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "PrInvoiceDetails",
+                name: "SLReturnDetails",
+                schema: "SL",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ItemId = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    UnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    DiscountRation1 = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    DiscountRation2 = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    DiscountRation3 = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    DiscountValue = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    InvoiceId = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SLReturnDetails", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SLReturnDetails_Items_ItemId",
+                        column: x => x.ItemId,
+                        principalSchema: "INV",
+                        principalTable: "Items",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SLReturnDetails_SLReturns_InvoiceId",
+                        column: x => x.InvoiceId,
+                        principalSchema: "SL",
+                        principalTable: "SLReturns",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PRInvoiceDetails",
                 schema: "PR",
                 columns: table => new
                 {
@@ -670,23 +649,24 @@ namespace ERPIN.Infrastructure.Migrations
                     DiscountValue = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    InvoiceId = table.Column<int>(type: "int", nullable: false)
+                    InvoiceId = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PrInvoiceDetails", x => x.Id);
+                    table.PrimaryKey("PK_PRInvoiceDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PrInvoiceDetails_Items_ItemId",
+                        name: "FK_PRInvoiceDetails_Items_ItemId",
                         column: x => x.ItemId,
                         principalSchema: "INV",
                         principalTable: "Items",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PrInvoiceDetails_PrInvoices_InvoiceId",
+                        name: "FK_PRInvoiceDetails_PRInvoices_InvoiceId",
                         column: x => x.InvoiceId,
                         principalSchema: "PR",
-                        principalTable: "PrInvoices",
+                        principalTable: "PRInvoices",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -698,52 +678,46 @@ namespace ERPIN.Infrastructure.Migrations
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PrInvoiceDetails_InvoiceId",
+                name: "IX_PRInvoiceDetails_InvoiceId",
                 schema: "PR",
-                table: "PrInvoiceDetails",
+                table: "PRInvoiceDetails",
                 column: "InvoiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PrInvoiceDetails_ItemId",
+                name: "IX_PRInvoiceDetails_ItemId",
                 schema: "PR",
-                table: "PrInvoiceDetails",
+                table: "PRInvoiceDetails",
                 column: "ItemId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PrInvoices_StoreId",
+                name: "IX_PRInvoices_StoreId",
                 schema: "PR",
-                table: "PrInvoices",
+                table: "PRInvoices",
                 column: "StoreId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PrInvoices_VendorId",
+                name: "IX_PRInvoices_VendorId",
                 schema: "PR",
-                table: "PrInvoices",
+                table: "PRInvoices",
                 column: "VendorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PrReturnDetails_InvoiceId",
+                name: "IX_PRReturnDetails_InvoiceId",
                 schema: "PR",
-                table: "PrReturnDetails",
+                table: "PRReturnDetails",
                 column: "InvoiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PrReturnDetails_ItemId",
+                name: "IX_PRReturnDetails_ItemId",
                 schema: "PR",
-                table: "PrReturnDetails",
+                table: "PRReturnDetails",
                 column: "ItemId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PrReturns_StoreId",
+                name: "IX_PRReturns_StoreId",
                 schema: "PR",
-                table: "PrReturns",
+                table: "PRReturns",
                 column: "StoreId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RoleClaims_RoleId",
-                schema: "AUTH",
-                table: "RoleClaims",
-                column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
@@ -754,52 +728,58 @@ namespace ERPIN.Infrastructure.Migrations
                 filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SlInvoiceDetails_SlInvoiceId",
+                name: "IX_SLInvoiceDetails_InvoiceId",
                 schema: "SL",
-                table: "SlInvoiceDetails",
-                column: "SlInvoiceId");
+                table: "SLInvoiceDetails",
+                column: "InvoiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SlInvoiceDetails_SlReturnId",
+                name: "IX_SLInvoiceDetails_ItemId",
                 schema: "SL",
-                table: "SlInvoiceDetails",
-                column: "SlReturnId");
+                table: "SLInvoiceDetails",
+                column: "ItemId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SlInvoices_CustomerId",
+                name: "IX_SLInvoiceDetails_SLReturnId",
                 schema: "SL",
-                table: "SlInvoices",
+                table: "SLInvoiceDetails",
+                column: "SLReturnId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SLInvoices_CustomerId",
+                schema: "SL",
+                table: "SLInvoices",
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SlInvoices_StoreId",
+                name: "IX_SLInvoices_StoreId",
                 schema: "SL",
-                table: "SlInvoices",
+                table: "SLInvoices",
                 column: "StoreId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SlReturns_CustomerId",
+                name: "IX_SLReturnDetails_InvoiceId",
                 schema: "SL",
-                table: "SlReturns",
+                table: "SLReturnDetails",
+                column: "InvoiceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SLReturnDetails_ItemId",
+                schema: "SL",
+                table: "SLReturnDetails",
+                column: "ItemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SLReturns_CustomerId",
+                schema: "SL",
+                table: "SLReturns",
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SlReturns_StoreId",
+                name: "IX_SLReturns_StoreId",
                 schema: "SL",
-                table: "SlReturns",
+                table: "SLReturns",
                 column: "StoreId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserClaims_UserId",
-                schema: "AUTH",
-                table: "UserClaims",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserLogins_UserId",
-                schema: "AUTH",
-                table: "UserLogins",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserRoles_RoleId",
@@ -834,43 +814,35 @@ namespace ERPIN.Infrastructure.Migrations
                 schema: "FI");
 
             migrationBuilder.DropTable(
-                name: "PrInvoiceDetails",
+                name: "ItemStores",
+                schema: "INV");
+
+            migrationBuilder.DropTable(
+                name: "PRInvoiceDetails",
                 schema: "PR");
 
             migrationBuilder.DropTable(
-                name: "PrReturnDetails",
+                name: "PRReturnDetails",
                 schema: "PR");
-
-            migrationBuilder.DropTable(
-                name: "RoleClaims",
-                schema: "AUTH");
 
             migrationBuilder.DropTable(
                 name: "Settings",
                 schema: "ST");
 
             migrationBuilder.DropTable(
-                name: "SlInvoiceDetails",
+                name: "SLInvoiceDetails",
                 schema: "SL");
 
             migrationBuilder.DropTable(
-                name: "SlReturnDetails",
+                name: "SLReturnDetails",
                 schema: "SL");
 
             migrationBuilder.DropTable(
-                name: "UserClaims",
-                schema: "AUTH");
-
-            migrationBuilder.DropTable(
-                name: "UserLogins",
-                schema: "AUTH");
+                name: "UserLogs",
+                schema: "SH");
 
             migrationBuilder.DropTable(
                 name: "UserRoles",
-                schema: "AUTH");
-
-            migrationBuilder.DropTable(
-                name: "UserTokens",
                 schema: "AUTH");
 
             migrationBuilder.DropTable(
@@ -878,23 +850,23 @@ namespace ERPIN.Infrastructure.Migrations
                 schema: "FI");
 
             migrationBuilder.DropTable(
-                name: "PrInvoices",
+                name: "PRInvoices",
                 schema: "PR");
+
+            migrationBuilder.DropTable(
+                name: "PRReturns",
+                schema: "PR");
+
+            migrationBuilder.DropTable(
+                name: "SLInvoices",
+                schema: "SL");
 
             migrationBuilder.DropTable(
                 name: "Items",
                 schema: "INV");
 
             migrationBuilder.DropTable(
-                name: "PrReturns",
-                schema: "PR");
-
-            migrationBuilder.DropTable(
-                name: "SlInvoices",
-                schema: "SL");
-
-            migrationBuilder.DropTable(
-                name: "SlReturns",
+                name: "SLReturns",
                 schema: "SL");
 
             migrationBuilder.DropTable(

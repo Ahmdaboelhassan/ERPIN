@@ -1,14 +1,16 @@
-﻿using ERPIN.Domain.IRepositories;
+﻿using ERPIN.Domain.Entities.AUTH;
+using ERPIN.Domain.IRepositories;
 using ERPIN.Infrastructure.Context;
 using ERPIN.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace ERPIN.Domain;
+namespace ERPIN.Infrastructure;
 public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructureLayer(this IServiceCollection services , IConfiguration config)
@@ -18,7 +20,13 @@ public static class DependencyInjection
             throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
         services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(connectionString));
+
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services.AddIdentityCore<AppUser>()
+                .AddRoles<AppRole>()
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
 
         services.AddAuthentication(option =>
         {

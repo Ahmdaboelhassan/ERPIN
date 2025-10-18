@@ -1,6 +1,6 @@
 ﻿using ERPIN.Domain.Entities.PR;
 
 namespace ERPIN.Domain.IRepositories;
-public interface IPrInvoiceDetailRepository : IRepository<PRInvoiceDetail>
+public interface IVendorRepository : IRepository<Vendor>
 {
 }

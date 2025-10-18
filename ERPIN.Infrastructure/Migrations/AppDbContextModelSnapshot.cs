@@ -22,6 +22,104 @@ namespace ERPIN.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("ERPIN.Domain.Entities.AUTH.AppRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("Roles", "AUTH");
+                });
+
+            modelBuilder.Entity("ERPIN.Domain.Entities.AUTH.AppUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("Users", "AUTH");
+                });
+
             modelBuilder.Entity("ERPIN.Domain.Entities.FI.Account", b =>
                 {
                     b.Property<int>("Id")
@@ -194,7 +292,6 @@ namespace ERPIN.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("BarCode")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Code")
@@ -265,10 +362,16 @@ namespace ERPIN.Infrastructure.Migrations
                     b.Property<int>("ItemId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Quantity")
+                    b.Property<int>("ProcessId")
                         .HasColumnType("int");
 
-                    b.Property<int>("StoreId")
+                    b.Property<int?>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SourceId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StoreId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("TotalCost")
@@ -338,7 +441,7 @@ namespace ERPIN.Infrastructure.Migrations
                     b.ToTable("Stores", "INV");
                 });
 
-            modelBuilder.Entity("ERPIN.Domain.Entities.PR.PrInvoice", b =>
+            modelBuilder.Entity("ERPIN.Domain.Entities.PR.PRInvoice", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -406,10 +509,10 @@ namespace ERPIN.Infrastructure.Migrations
 
                     b.HasIndex("VendorId");
 
-                    b.ToTable("PrInvoices", "PR");
+                    b.ToTable("PRInvoices", "PR");
                 });
 
-            modelBuilder.Entity("ERPIN.Domain.Entities.PR.PrInvoiceDetail", b =>
+            modelBuilder.Entity("ERPIN.Domain.Entities.PR.PRInvoiceDetail", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -435,6 +538,9 @@ namespace ERPIN.Infrastructure.Migrations
                     b.Property<int>("InvoiceId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("ItemId")
                         .HasColumnType("int");
 
@@ -453,10 +559,10 @@ namespace ERPIN.Infrastructure.Migrations
 
                     b.HasIndex("ItemId");
 
-                    b.ToTable("PrInvoiceDetails", "PR");
+                    b.ToTable("PRInvoiceDetails", "PR");
                 });
 
-            modelBuilder.Entity("ERPIN.Domain.Entities.PR.PrReturn", b =>
+            modelBuilder.Entity("ERPIN.Domain.Entities.PR.PRReturn", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -522,10 +628,10 @@ namespace ERPIN.Infrastructure.Migrations
 
                     b.HasIndex("StoreId");
 
-                    b.ToTable("PrReturns", "PR");
+                    b.ToTable("PRReturns", "PR");
                 });
 
-            modelBuilder.Entity("ERPIN.Domain.Entities.PR.PrReturnDetail", b =>
+            modelBuilder.Entity("ERPIN.Domain.Entities.PR.PRReturnDetail", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -551,6 +657,9 @@ namespace ERPIN.Infrastructure.Migrations
                     b.Property<int>("InvoiceId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("ItemId")
                         .HasColumnType("int");
 
@@ -569,7 +678,7 @@ namespace ERPIN.Infrastructure.Migrations
 
                     b.HasIndex("ItemId");
 
-                    b.ToTable("PrReturnDetails", "PR");
+                    b.ToTable("PRReturnDetails", "PR");
                 });
 
             modelBuilder.Entity("ERPIN.Domain.Entities.PR.Vendor", b =>
@@ -704,7 +813,7 @@ namespace ERPIN.Infrastructure.Migrations
                     b.ToTable("Customers", "SL");
                 });
 
-            modelBuilder.Entity("ERPIN.Domain.Entities.SL.SlInvoice", b =>
+            modelBuilder.Entity("ERPIN.Domain.Entities.SL.SLInvoice", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -772,10 +881,10 @@ namespace ERPIN.Infrastructure.Migrations
 
                     b.HasIndex("StoreId");
 
-                    b.ToTable("SlInvoices", "SL");
+                    b.ToTable("SLInvoices", "SL");
                 });
 
-            modelBuilder.Entity("ERPIN.Domain.Entities.SL.SlInvoiceDetail", b =>
+            modelBuilder.Entity("ERPIN.Domain.Entities.SL.SLInvoiceDetail", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -801,16 +910,16 @@ namespace ERPIN.Infrastructure.Migrations
                     b.Property<int>("InvoiceId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("ItemId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Quantity")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("SlInvoiceId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SlReturnId")
+                    b.Property<int?>("SLReturnId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("TotalPrice")
@@ -821,14 +930,16 @@ namespace ERPIN.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SlInvoiceId");
+                    b.HasIndex("InvoiceId");
 
-                    b.HasIndex("SlReturnId");
+                    b.HasIndex("ItemId");
 
-                    b.ToTable("SlInvoiceDetails", "SL");
+                    b.HasIndex("SLReturnId");
+
+                    b.ToTable("SLInvoiceDetails", "SL");
                 });
 
-            modelBuilder.Entity("ERPIN.Domain.Entities.SL.SlReturn", b =>
+            modelBuilder.Entity("ERPIN.Domain.Entities.SL.SLReturn", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -896,10 +1007,10 @@ namespace ERPIN.Infrastructure.Migrations
 
                     b.HasIndex("StoreId");
 
-                    b.ToTable("SlReturns", "SL");
+                    b.ToTable("SLReturns", "SL");
                 });
 
-            modelBuilder.Entity("ERPIN.Domain.Entities.SL.SlReturnDetail", b =>
+            modelBuilder.Entity("ERPIN.Domain.Entities.SL.SLReturnDetail", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -925,6 +1036,9 @@ namespace ERPIN.Infrastructure.Migrations
                     b.Property<int>("InvoiceId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("ItemId")
                         .HasColumnType("int");
 
@@ -939,205 +1053,26 @@ namespace ERPIN.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SlReturnDetails", "SL");
+                    b.HasIndex("InvoiceId");
+
+                    b.HasIndex("ItemId");
+
+                    b.ToTable("SLReturnDetails", "SL");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
-
-                    b.ToTable("Roles", "AUTH");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("RoleClaims", "AUTH");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
+                    b.Property<int>("RoleId")
                         .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.ToTable("Users", "AUTH");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserClaims", "AUTH");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
-                {
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("LoginProvider", "ProviderKey");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserLogins", "AUTH");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("UserId", "RoleId");
 
                     b.HasIndex("RoleId");
 
                     b.ToTable("UserRoles", "AUTH");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserId", "LoginProvider", "Name");
-
-                    b.ToTable("UserTokens", "AUTH");
                 });
 
             modelBuilder.Entity("ERPIN.Domain.Entities.FI.Drawer", b =>
@@ -1151,7 +1086,7 @@ namespace ERPIN.Infrastructure.Migrations
                     b.Navigation("Account");
                 });
 
-            modelBuilder.Entity("ERPIN.Domain.Entities.PR.PrInvoice", b =>
+            modelBuilder.Entity("ERPIN.Domain.Entities.PR.PRInvoice", b =>
                 {
                     b.HasOne("ERPIN.Domain.Entities.INV.Store", "Store")
                         .WithMany()
@@ -1168,9 +1103,9 @@ namespace ERPIN.Infrastructure.Migrations
                     b.Navigation("Vendor");
                 });
 
-            modelBuilder.Entity("ERPIN.Domain.Entities.PR.PrInvoiceDetail", b =>
+            modelBuilder.Entity("ERPIN.Domain.Entities.PR.PRInvoiceDetail", b =>
                 {
-                    b.HasOne("ERPIN.Domain.Entities.PR.PrInvoice", "Invoice")
+                    b.HasOne("ERPIN.Domain.Entities.PR.PRInvoice", "Invoice")
                         .WithMany("invoiceDetails")
                         .HasForeignKey("InvoiceId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1187,7 +1122,7 @@ namespace ERPIN.Infrastructure.Migrations
                     b.Navigation("Item");
                 });
 
-            modelBuilder.Entity("ERPIN.Domain.Entities.PR.PrReturn", b =>
+            modelBuilder.Entity("ERPIN.Domain.Entities.PR.PRReturn", b =>
                 {
                     b.HasOne("ERPIN.Domain.Entities.INV.Store", "Store")
                         .WithMany()
@@ -1196,9 +1131,9 @@ namespace ERPIN.Infrastructure.Migrations
                     b.Navigation("Store");
                 });
 
-            modelBuilder.Entity("ERPIN.Domain.Entities.PR.PrReturnDetail", b =>
+            modelBuilder.Entity("ERPIN.Domain.Entities.PR.PRReturnDetail", b =>
                 {
-                    b.HasOne("ERPIN.Domain.Entities.PR.PrReturn", "Invoice")
+                    b.HasOne("ERPIN.Domain.Entities.PR.PRReturn", "Invoice")
                         .WithMany("ReturnDetails")
                         .HasForeignKey("InvoiceId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1215,7 +1150,7 @@ namespace ERPIN.Infrastructure.Migrations
                     b.Navigation("Item");
                 });
 
-            modelBuilder.Entity("ERPIN.Domain.Entities.SL.SlInvoice", b =>
+            modelBuilder.Entity("ERPIN.Domain.Entities.SL.SLInvoice", b =>
                 {
                     b.HasOne("ERPIN.Domain.Entities.SL.Customer", "Customer")
                         .WithMany()
@@ -1232,18 +1167,30 @@ namespace ERPIN.Infrastructure.Migrations
                     b.Navigation("Store");
                 });
 
-            modelBuilder.Entity("ERPIN.Domain.Entities.SL.SlInvoiceDetail", b =>
+            modelBuilder.Entity("ERPIN.Domain.Entities.SL.SLInvoiceDetail", b =>
                 {
-                    b.HasOne("ERPIN.Domain.Entities.SL.SlInvoice", null)
-                        .WithMany("InvoiceDetail")
-                        .HasForeignKey("SlInvoiceId");
+                    b.HasOne("ERPIN.Domain.Entities.SL.SLInvoice", "Invoice")
+                        .WithMany("InvoiceDetails")
+                        .HasForeignKey("InvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("ERPIN.Domain.Entities.SL.SlReturn", null)
-                        .WithMany("InvoiceDetail")
-                        .HasForeignKey("SlReturnId");
+                    b.HasOne("ERPIN.Domain.Entities.INV.Item", "Item")
+                        .WithMany()
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ERPIN.Domain.Entities.SL.SLReturn", null)
+                        .WithMany("InvoiceDetails")
+                        .HasForeignKey("SLReturnId");
+
+                    b.Navigation("Invoice");
+
+                    b.Navigation("Item");
                 });
 
-            modelBuilder.Entity("ERPIN.Domain.Entities.SL.SlReturn", b =>
+            modelBuilder.Entity("ERPIN.Domain.Entities.SL.SLReturn", b =>
                 {
                     b.HasOne("ERPIN.Domain.Entities.SL.Customer", "Customer")
                         .WithMany()
@@ -1260,75 +1207,58 @@ namespace ERPIN.Infrastructure.Migrations
                     b.Navigation("Store");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("ERPIN.Domain.Entities.SL.SLReturnDetail", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("ERPIN.Domain.Entities.SL.SLReturn", "Invoice")
                         .WithMany()
-                        .HasForeignKey("RoleId")
+                        .HasForeignKey("InvoiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("ERPIN.Domain.Entities.INV.Item", "Item")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Invoice");
+
+                    b.Navigation("Item");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("ERPIN.Domain.Entities.AUTH.AppRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("ERPIN.Domain.Entities.AUTH.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ERPIN.Domain.Entities.PR.PrInvoice", b =>
+            modelBuilder.Entity("ERPIN.Domain.Entities.PR.PRInvoice", b =>
                 {
                     b.Navigation("invoiceDetails");
                 });
 
-            modelBuilder.Entity("ERPIN.Domain.Entities.PR.PrReturn", b =>
+            modelBuilder.Entity("ERPIN.Domain.Entities.PR.PRReturn", b =>
                 {
                     b.Navigation("ReturnDetails");
                 });
 
-            modelBuilder.Entity("ERPIN.Domain.Entities.SL.SlInvoice", b =>
+            modelBuilder.Entity("ERPIN.Domain.Entities.SL.SLInvoice", b =>
                 {
-                    b.Navigation("InvoiceDetail");
+                    b.Navigation("InvoiceDetails");
                 });
 
-            modelBuilder.Entity("ERPIN.Domain.Entities.SL.SlReturn", b =>
+            modelBuilder.Entity("ERPIN.Domain.Entities.SL.SLReturn", b =>
                 {
-                    b.Navigation("InvoiceDetail");
+                    b.Navigation("InvoiceDetails");
                 });
 #pragma warning restore 612, 618
         }

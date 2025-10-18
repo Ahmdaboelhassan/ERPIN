@@ -4,12 +4,12 @@ using ERPIN.Domain.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERPIN.Domain.Entities.PR;
-[Table("PrReturnDetails", Schema = nameof(Schemes.PR))]
+[Table("PRReturnDetails", Schema = nameof(Schemes.PR))]
 
-public class PrReturnDetail : InvoiceDetailEntity
+public class PRReturnDetail : InvoiceDetailEntity
 {
     [ForeignKey(nameof(InvoiceId))]
-    public PrReturn Invoice { get; set; }
+    public PRReturn Invoice { get; set; }
     
     [ForeignKey(nameof(ItemId))]
     public Item Item { get; set; }

@@ -5,8 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERPIN.Domain.Entities.SL;
 
-[Table("SlInvoices", Schema = nameof(Schemes.SL))]
-public class SlInvoice : InvoiceEntity
+[Table("SLInvoices", Schema = nameof(Schemes.SL))]
+public class SLInvoice : InvoiceEntity
 {
     public int CustomerId { get; set; }
 
@@ -15,5 +15,5 @@ public class SlInvoice : InvoiceEntity
 
     [ForeignKey(nameof(StoreId))]
     public Store Store { get; set; }
-    public List<SlInvoiceDetail> InvoiceDetail { get; set; }
+    public List<SLInvoiceDetail> InvoiceDetails { get; set; }
 }
