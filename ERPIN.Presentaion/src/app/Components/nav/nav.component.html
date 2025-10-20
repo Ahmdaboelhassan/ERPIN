@@ -1,0 +1,234 @@
+<nav>
+  <div
+    #nav
+    class="bg-slate-800 min-h-[calc(100vh-1.5rem)] mb-2 py-3 rounded-xl shadow-md transition-all absolute z-50 -translate-x-[102%] lg:relative lg:translate-x-0 w-3/4 lg:w-full"
+  >
+    <div>
+      <span
+        (click)="hideNavBar()"
+        class="p-2 bg-slate-800/85 hover:bg-slate-800 text-white rounded-full absolute hidden lg:inline-block right-2 z-10 transition-all cursor-pointer opacity-0 hover:opacity-100"
+      >
+        <i class="fa-solid fa-arrow-left"></i>
+      </span>
+    </div>
+
+    <div class="text-center p-5 flex justify-center">
+      <a routerLink="Home">
+        <img src="logo-rl.png" alt="Logo" class="w-28 h-28 md:w-40 md:h-40" />
+      </a>
+    </div>
+
+    <div class="p-5">
+      <!-- Home -->
+      <a
+        routerLink="Home"
+        class="bg-slate-800 font-bold text-white block py-3 px-6 mb-2 hover:bg-gray-800 rounded-xl"
+        style="box-shadow: inset 0px -1px 2px #0000006e"
+      >
+        <i class="fa-solid fa-house me-2"></i>{{ "Home" | translate }}
+      </a>
+
+      <mat-accordion class="example-headers-align">
+        <!-- Sales Invoice -->
+        <div class="mb-2">
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="font-bold text-slate-800">
+                <i class="fa-solid fa-file-invoice-dollar me-2"></i>
+                {{ "SLInvoice.Name" | translate }}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <ul>
+              <li>
+                <a
+                  routerLink="Sales/Create"
+                  routerLinkActive="route-active"
+                  class="p-2 inline-block hover:text-slate-950 font-bold"
+                >
+                  {{ "SLInvoice.Create" | translate }}
+                </a>
+              </li>
+              <li>
+                <a
+                  routerLink="Sales/List"
+                  routerLinkActive="route-active"
+                  class="p-2 inline-block hover:text-slate-950 font-bold"
+                >
+                  {{ "SLInvoice.List" | translate }}
+                </a>
+              </li>
+            </ul>
+          </mat-expansion-panel>
+        </div>
+
+        <!-- Sales Return -->
+        <div class="mb-2">
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="font-bold text-slate-800">
+                <i class="fa-solid fa-rotate-left me-2"></i>
+                {{ "SLReturn.Name" | translate }}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <ul>
+              <li>
+                <a
+                  routerLink="SalesReturn/Create"
+                  routerLinkActive="route-active"
+                  class="p-2 inline-block hover:text-slate-950 font-bold"
+                >
+                  {{ "SLReturn.Create" | translate }}
+                </a>
+              </li>
+              <li>
+                <a
+                  routerLink="SalesReturn/List"
+                  routerLinkActive="route-active"
+                  class="p-2 inline-block hover:text-slate-950 font-bold"
+                >
+                  {{ "SLReturn.List" | translate }}
+                </a>
+              </li>
+            </ul>
+          </mat-expansion-panel>
+        </div>
+
+        <!-- Purchase Invoice -->
+        <div class="mb-2">
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="font-bold text-slate-800">
+                <i class="fa-solid fa-file-invoice me-2"></i>
+                {{ "PRInvoice.Name" | translate }}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <ul>
+              <li>
+                <a
+                  routerLink="Purchase/Create"
+                  routerLinkActive="route-active"
+                  class="p-2 inline-block hover:text-slate-950 font-bold"
+                >
+                  {{ "PRInvoice.Create" | translate }}
+                </a>
+              </li>
+              <li>
+                <a
+                  routerLink="Purchase/List"
+                  routerLinkActive="route-active"
+                  class="p-2 inline-block hover:text-slate-950 font-bold"
+                >
+                  {{ "PRInvoice.List" | translate }}
+                </a>
+              </li>
+            </ul>
+          </mat-expansion-panel>
+        </div>
+
+        <!-- Purchase Return -->
+        <div class="mb-2">
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="font-bold text-slate-800">
+                <i class="fa-solid fa-rotate-right me-2"></i>
+                {{ "PRReturn.Name" | translate }}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <ul>
+              <li>
+                <a
+                  routerLink="PurchaseReturn/Create"
+                  routerLinkActive="route-active"
+                  class="p-2 inline-block hover:text-slate-950 font-bold"
+                >
+                  {{ "PRReturn.Create" | translate }}
+                </a>
+              </li>
+              <li>
+                <a
+                  routerLink="PurchaseReturn/List"
+                  routerLinkActive="route-active"
+                  class="p-2 inline-block hover:text-slate-950 font-bold"
+                >
+                  {{ "PRReturn.List" | translate }}
+                </a>
+              </li>
+            </ul>
+          </mat-expansion-panel>
+        </div>
+
+        <!-- Items -->
+        <div class="mb-2">
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="font-bold text-slate-800">
+                <i class="fa-solid fa-box me-2"></i>
+                {{ "Items" | translate }}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <ul>
+              <li>
+                <a
+                  routerLink="Items/Create"
+                  routerLinkActive="route-active"
+                  class="p-2 inline-block hover:text-slate-950 font-bold"
+                >
+                  {{ "Create" | translate }}
+                </a>
+              </li>
+              <li>
+                <a
+                  routerLink="Items/List"
+                  routerLinkActive="route-active"
+                  class="p-2 inline-block hover:text-slate-950 font-bold"
+                >
+                  {{ "List" | translate }}
+                </a>
+              </li>
+            </ul>
+          </mat-expansion-panel>
+        </div>
+
+        <!-- Reports -->
+        <div class="mb-2">
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="font-bold text-slate-800">
+                <i class="fa-solid fa-chart-bar me-2"></i>
+                {{ "Reports" | translate }}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <ul>
+              <li>
+                <a
+                  routerLink="Reports/Sales"
+                  routerLinkActive="route-active"
+                  class="p-2 inline-block hover:text-slate-950 font-bold"
+                >
+                  {{ "Sales" | translate }}
+                </a>
+              </li>
+              <li>
+                <a
+                  routerLink="Reports/Purchases"
+                  routerLinkActive="route-active"
+                  class="p-2 inline-block hover:text-slate-950 font-bold"
+                >
+                  {{ "Purchases" | translate }}
+                </a>
+              </li>
+            </ul>
+          </mat-expansion-panel>
+        </div>
+      </mat-accordion>
+    </div>
+  </div>
+</nav>
+
+<span
+  #toggleButton
+  (click)="toggleNavBar()"
+  class="p-4 bg-slate-800/85 hover:bg-slate-800 text-white rounded-lg fixed inline-block bottom-4 right-2 z-10 lg:hidden transition-all cursor-pointer"
+>
+  <i class="fa-solid fa-bars fa-xl"></i>
+</span>

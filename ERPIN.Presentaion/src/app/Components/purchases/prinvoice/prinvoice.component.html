@@ -1,0 +1,12 @@
+<app-date-range (dates)="GetAllInvoice($event)"></app-date-range>
+<div class="scroller-page bg-white mt-4 rounded-xl p-12">
+  <p class="font-semibold text-3xl mb-8 flex justify-between items-center">
+    <span>{{ "PRInvoice.List" | translate }}</span>
+    <button class="btn-add" [routerLink]="['/Purchase', 'Create']">
+      <i class="fa-solid fa-pen-to-square"></i>
+
+      {{ "PRInvoice.Create" | translate }}
+    </button>
+  </p>
+  <div #tableRef class="tabulator-table"></div>
+</div>

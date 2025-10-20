@@ -1,0 +1,191 @@
+<div class="scroller-page p-10">
+  <div>
+    <h1 class="text-slate-800 font-bold text-3xl mb-4">
+      {{ (isEdit ? "SLReturn.Edit" : "SLReturn.Create") | translate }}
+    </h1>
+    <hr />
+  </div>
+
+  <div class="py-5">
+    <div class="grid grid-cols-1 gap-7">
+      <div class="col-span-1 lg:col-span-1">
+        <app-invoice-details-component></app-invoice-details-component>
+      </div>
+      <hr />
+      @if(invoiceForm){
+      <form
+        [formGroup]="invoiceForm"
+        class="grid grid-cols-3 gap-3 col-span-1 lg:col-span-1"
+      >
+        <input type="hidden" formControlName="id" />
+
+        <div class="col-span-2 grid grid-cols-6 gap-2">
+          <div class="form-group col-span-6 lg:col-span-3 text-xl">
+            <label>{{ "Invoice.Code" | translate }}</label>
+            <input
+              type="text"
+              formControlName="code"
+              class="form-control w-full"
+            />
+          </div>
+          <div class="form-group col-span-6 lg:col-span-3 text-xl">
+            <label>{{ "Invoice.Date" | translate }}</label>
+            <input
+              type="datetime-local"
+              formControlName="createdAt"
+              class="form-control w-full"
+            />
+          </div>
+          <div class="form-group col-span-6 lg:col-span-3">
+            <label class="text-xl">{{ "Customer.Name" | translate }}</label>
+            <input
+              type="hidden"
+              formControlName="customerId"
+              class="form-control w-full"
+            />
+            <select formControlName="customerName" class="form-control w-full">
+              <option
+                *ngFor="let customer of customers"
+                [ngValue]="customer.value"
+              >
+                {{ customer.text }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group col-span-6 lg:col-span-3">
+            <label class="text-xl">{{ "Store.Name" | translate }}</label>
+            <input
+              type="hidden"
+              formControlName="storeId"
+              class="form-control w-full"
+            />
+            <select formControlName="storeName" class="form-control w-full">
+              <option *ngFor="let store of stores" [ngValue]="store.value">
+                {{ store.text }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group col-span-6 lg:col-span-2">
+            <label class="text-xl">{{ "Invoice.DiscR" | translate }}</label>
+
+            <input
+              type="number"
+              (change)="CalcInvoiceDiscValue()"
+              formControlName="discountRatio"
+              class="form-control w-full"
+            />
+          </div>
+          <div class="form-group col-span-6 lg:col-span-2">
+            <label class="text-xl">{{ "Invoice.Disc" | translate }}</label>
+            <input
+              type="number"
+              (change)="CalcInvoiceDiscRatio()"
+              formControlName="discount"
+              class="form-control w-full"
+            />
+          </div>
+          <div class="form-group col-span-6 lg:col-span-2">
+            <label class="text-xl">{{ "Invoice.Tax" | translate }}</label>
+            <input
+              type="number"
+              (change)="CalculateNetPrice()"
+              formControlName="tax"
+              class="form-control w-full"
+            />
+          </div>
+          <div class="form-group col-span-6 lg:col-span-2">
+            <label class="text-xl">{{ "Invoice.Net" | translate }}</label>
+            <input
+              type="number"
+              readonly
+              (change)="CalculateNetPrice()"
+              formControlName="net"
+              class="form-control w-full"
+            />
+          </div>
+          <div class="form-group col-span-6 lg:col-span-2">
+            <label class="text-xl">{{ "Invoice.Paid" | translate }}</label>
+            <input
+              type="number"
+              (change)="CalRemainValue()"
+              formControlName="paid"
+              class="form-control w-full"
+            />
+          </div>
+
+          <div class="form-group col-span-6 lg:col-span-2">
+            <label class="text-xl">{{ "Invoice.Remains" | translate }}</label>
+            <input
+              type="number"
+              readonly
+              formControlName="remain"
+              class="form-control w-full"
+            />
+          </div>
+          <div class="form-group col-span-6">
+            <label class="text-xl">{{ "Invoice.Notes" | translate }}</label>
+            <textarea
+              formControlName="note"
+              class="form-control w-full"
+              dir="auto"
+            ></textarea>
+          </div>
+        </div>
+      </form>
+      }
+    </div>
+  </div>
+
+  <div
+    class="mt-5 flex text-center lg:justify-items-start lg:flex-row flex-col"
+  >
+    <!-- Save Button -->
+    <button
+      (click)="Submit()"
+      [disabled]="!invoiceForm?.valid"
+      class="btn-save me-2 flex items-center justify-center gap-2"
+    >
+      <i class="fa-solid fa-floppy-disk"></i>
+      {{ "Save" | translate }}
+    </button>
+
+    <!-- List Button -->
+    <a
+      routerLink="/SalesReturn/List"
+      class="btn-primary me-2 flex items-center justify-center gap-2"
+    >
+      <i class="fa-solid fa-list"></i>
+      {{ "List" | translate }}
+    </a>
+
+    @if (isEdit) {
+    <!-- Delete Button -->
+    <button
+      role="button"
+      type="button"
+      (click)="Delete()"
+      class="btn-danger me-2 flex items-center justify-center gap-2"
+    >
+      <i class="fa-solid fa-trash"></i>
+      {{ "Delete" | translate }}
+    </button>
+
+    <!-- Print Button (custom color) -->
+    <button
+      role="button"
+      type="button"
+      (click)="printInvoice()"
+      class="btn-add me-2 flex items-center justify-center gap-2"
+    >
+      <i class="fa-solid fa-print"></i>
+      {{ "Print" | translate }}
+    </button>
+    }
+    <button class="btn-add" [routerLink]="['/SalesReturn', 'Create']">
+      <i class="fa-solid fa-pen-to-square"></i>
+
+      {{ "New" | translate }}
+    </button>
+  </div>
+</div>

@@ -1,0 +1,75 @@
+/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  height: 100%;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+body {
+  padding: 0.5rem 0.25rem;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #eee;
+}
+
+/* Custom Styles */
+.daterange-result {
+  @apply min-h-[calc(100%-15rem)]  lg:min-h-[calc(100%-6rem)];
+}
+
+.search-result {
+  @apply min-h-[calc(100%-10rem)]  lg:min-h-[calc(100%-7rem)];
+}
+
+.full-page {
+  height: 100%;
+  width: 100%;
+  background-color: white;
+  top: 0;
+  left: 0;
+  border-radius: 0.75rem;
+}
+.scroller-page {
+  width: 100%;
+  background-color: white;
+  top: 0;
+  left: 0;
+  border-radius: 0.75rem;
+}
+
+.btn-primary {
+  @apply my-1 inline-block text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-7 py-3;
+}
+.btn-save {
+  @apply my-1 inline-block text-white  bg-green-700 hover:bg-green-800 disabled:bg-green-300 font-medium rounded-lg text-sm px-7 py-3;
+}
+.btn-danger {
+  @apply my-1 inline-block text-white bg-red-700  hover:bg-red-800  font-medium rounded-lg text-sm px-7 py-3;
+}
+.btn-add {
+  @apply my-1 inline-block text-white bg-slate-700 disabled:bg-slate-300 hover:bg-slate-800 font-medium rounded-lg text-sm px-7 py-3;
+}
+.form-control,
+.ng-select .ng-select-container {
+  @apply my-1 bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus-visible:ring-slate-700 focus-visible:border-slate-700 hover:border-slate-700 shadow-sm block p-2.5 outline-none disabled:bg-gray-100  cursor-text;
+}
+
+.ng-select.ng-select-single .ng-select-container {
+  height: 45px;
+}
+
+.ng-select.ng-select-focused:not(.ng-select-opened) > .ng-select-container {
+  @apply border-slate-700 shadow-none;
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

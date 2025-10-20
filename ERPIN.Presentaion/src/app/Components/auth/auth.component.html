@@ -1,0 +1,65 @@
+<div class="w-full h-full flex justify-center lg:items-center p-3">
+  <div
+    class="w-full lg:w-1/3 p-6 h-fit bg-white border border-gray-200 rounded-xl shadow"
+  >
+    <div class="mb-16 text-center">
+      <div class="p-5 flex justify-center">
+        <img src="logo-rd.ico" alt="Logo" class="w-36 h-36" />
+      </div>
+      <h2 class="text-slate-800 font-bold text-lg lg:text-xl">
+        {{ "welcome" | translate }}
+      </h2>
+    </div>
+    <form #f="ngForm" autocomplete="off">
+      <div class="mt-5">
+        <label for="Username"> {{ "username" | translate }} </label>
+        <input
+          type="text"
+          class="form-control w-full"
+          ngModel
+          name="Username"
+          required
+          autocomplete="new-password"
+        />
+      </div>
+      <div class="mt-5">
+        <label for="Password"> {{ "password" | translate }} </label>
+        <input
+          type="password"
+          class="form-control w-full"
+          ngModel
+          name="Password"
+          required
+          autocomplete="new-password"
+        />
+      </div>
+      <!-- <div class="form-group w-full mt-2">
+        <label class="inline-flex items-center cursor-pointer w-full">
+          <input
+            type="checkbox"
+            [ngModel]="true"
+            name="staylogin"
+            class="sr-only peer"
+          />
+          <div
+            class="relative w-11 h-6 bg-gray-200 rounded-full peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
+          ></div>
+          <span class="ms-3 text-sm font-medium text-gray-900">Stay Login</span>
+        </label>
+      </div> -->
+      <div class="mt-4">
+        <button
+          (click)="Login(f)"
+          [disabled]="!f.valid"
+          class="btn-add w-full disabled:opacity-50"
+        >
+          {{ "login" | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+@if(isLoad()){
+<app-loading></app-loading>
+}
