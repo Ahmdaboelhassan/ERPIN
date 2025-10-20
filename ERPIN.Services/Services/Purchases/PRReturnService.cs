@@ -1,7 +1,10 @@
 ﻿using ERPIN.Domain.Entities.INV;
 using ERPIN.Domain.Entities.PR;
+using ERPIN.Domain.Entities.SL;
 using ERPIN.Domain.Enums;
 using ERPIN.Domain.IRepositories;
+using ERPIN.Services.DTOs.Base;
+using ERPIN.Services.DTOs.Bases;
 using ERPIN.Services.DTOs.Request;
 using ERPIN.Services.DTOs.Response;
 using ERPIN.Services.Extinctions;
@@ -19,7 +22,8 @@ public interface IPRReturnService
     Task<ResultResponse<int>> EditInvoice(CreatePRReturn model);
     Task<ResultResponse<PRReturnResponse>> GetInvoice(int id);
     Task<ResultResponse<int>> GetNextCode();
-    Task<ResultResponse<CreatePRReturn>> NewInvoice();
+    Task<ResultResponse<PRReturnResponse>> NewInvoice();
+    Task<IEnumerable<PRReturnResponse>> GetAll(DateTime from, DateTime to);
 }
 
 public class PRReturnService : IPRReturnService
@@ -37,22 +41,28 @@ public class PRReturnService : IPRReturnService
         currentUserId = httpContext.HttpContext.GetUserId();
     }
 
-    public async Task<ResultResponse<CreatePRReturn>> NewInvoice()
+    public async Task<ResultResponse<PRReturnResponse>> NewInvoice()
     {
+
+        var defaultStore = await _unitOfWork.Stores.GetFirst();
+        var defaultVendor = await _unitOfWork.Vendors.GetFirst();
 
         var code = await GetNextCode();
 
-        var model = new CreatePRReturn()
+        var model = new PRReturnResponse()
         {
+            StoreId = defaultStore.Id,
+            VendorId = defaultVendor.Id,
+            CreatedAt = DateTime.Now,
             Code = code.Data,
-            ReturnDetails = new List<CreatePRReturnDetail>()
+            InvoiceDetails = new List<InvoiceDetailResponseBase>()
         };
 
         return Result.Success(model);
     }
     public async Task<ResultResponse<PRReturnResponse>> GetInvoice(int id)
     {
-        var invoice = await _unitOfWork.PRReturns.Get(x => x.Id == id, "ReturnDetails");
+        var invoice = await _unitOfWork.PRReturns.Get(x => x.Id == id, "ReturnDetails" , "ReturnDetails.Item");
         if (invoice == null)
             return Result.Error<PRReturnResponse>("Invoice not found");
 
@@ -60,35 +70,44 @@ public class PRReturnService : IPRReturnService
 
         return Result.Success(invoiceRes);
     }
+    public async Task<IEnumerable<PRReturnResponse>> GetAll(DateTime from, DateTime to)
+    {
+        return await _unitOfWork.PRInvoices
+             .SelectAll(m => m.CreatedAt.Date >= from.Date && m.CreatedAt.Date <= to.Date,
+             m => new PRReturnResponse
+             {
+                 Id = m.Id,
+                 Code = m.Code,
+                 CreatedAt = m.CreatedAt,
+                 Discount = m.Discount,
+                 Paid = m.Paid,
+                 Net = m.Net,
+                 Remain = m.Remain,
+
+             });
+    }
 
     public async Task<ResultResponse<int>> CreateInvoice(CreatePRReturn model)
     {
         // Add Invoice Data 
-        if (model.ReturnDetails == null || model.ReturnDetails.Count == 0)
+        if (model.InvoiceDetails == null || model.InvoiceDetails.Count == 0)
             return Result.Error<int>("Invoice must have at least one item");
 
         if (model.Paid > model.Net)
             return Result.Error<int>("Paid amount cannot be greater than total amount");
 
-        var defaultStore = await _unitOfWork.Stores.GetFirst();
-        var defaultVendor = await _unitOfWork.Vendors.GetFirst();
-
-        if (defaultStore == null || defaultVendor == null)
-            return Result.Error<int>("No store or customer found, please create a store first");
-
         var invoice = _mapper.Map<PRReturn>(model);
 
         invoice.CreatedBy = currentUserId;
-        invoice.CreatedAt = DateTime.Now;
-        invoice.StoreId = defaultStore.Id;
-        invoice.VendorId = defaultVendor.Id;
+        invoice.CreatedAt = model.CreatedAt;
+      
 
 
         // Create Item Store 
         await _unitOfWork.PRReturns.AddAsync(invoice);
         await _unitOfWork.SaveChangesAsync();
 
-        var itemStores = model.ReturnDetails
+        var itemStores = model.InvoiceDetails
             .Select(g => new ItemStore
             {
                 ItemId = g.ItemId,
@@ -122,7 +141,7 @@ public class PRReturnService : IPRReturnService
             return Result.Error<int>("Invoice not found");
 
         // Add Invoice Data 
-        if (model.ReturnDetails == null || model.ReturnDetails.Count == 0)
+        if (model.InvoiceDetails == null || model.InvoiceDetails.Count == 0)
             return Result.Error<int>("Invoice must have at least one item");
 
         if (model.Paid > model.Net)
@@ -148,7 +167,7 @@ public class PRReturnService : IPRReturnService
 
         _unitOfWork.ItemStores.DeleteRange(oldItemStore);
 
-        var itemStores = model.ReturnDetails
+        var itemStores = model.InvoiceDetails
             .Select(g => new ItemStore
             {
                 ItemId = g.ItemId,

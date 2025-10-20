@@ -1,5 +1,6 @@
 ﻿using ERPIN.Domain.Entities.PR;
 using ERPIN.Domain.Entities.SL;
+using ERPIN.Services.DTOs.Bases;
 using ERPIN.Services.DTOs.Request;
 using ERPIN.Services.DTOs.Response;
 using Mapster;
@@ -12,23 +13,48 @@ public class MappingConfig : IRegister
     {
         // Response 
         config.NewConfig<SLInvoice, SLInvoiceResponse>();
-        config.NewConfig<SLInvoiceDetail, SLInvoiceDetailResponse>();
         config.NewConfig<SLReturn, SLReturnResponse>();
-        config.NewConfig<SLReturnDetail, SLReturnDetailResponse>();
         config.NewConfig<PRInvoice, PRInvoiceResponse>();
-        config.NewConfig<PRInvoiceDetail, PRInvoiceDetailResponse>();
         config.NewConfig<PRReturn, PRReturnResponse>();
-        config.NewConfig<PRReturnDetail, PRReturnDetailResponse>();
+ 
+        config.NewConfig<SLInvoiceDetail, InvoiceDetailResponseBase>()
+            .Map(dest => dest.BarCode, src => src.Item.BarCode)
+            .Map(dest => dest.itemName, src => src.Item.Name)
+            .Map(dest => dest.itemNameEn, src => src.Item.NameEn)
+            .Map(dest => dest.BarCode, src => src.Item.BarCode)
+            .Map(dest => dest.Code, src =>  src.Item.Code);
+
+        config.NewConfig<SLReturnDetail, InvoiceDetailResponseBase>()
+            .Map(dest => dest.BarCode, src => src.Item.BarCode)
+            .Map(dest => dest.itemName, src => src.Item.Name)
+            .Map(dest => dest.itemNameEn, src => src.Item.NameEn)
+            .Map(dest => dest.Code, src => src.Item.Code);
+
+        config.NewConfig<PRInvoiceDetail, InvoiceDetailResponseBase>()
+            .Map(dest => dest.BarCode, src => src.Item.BarCode)
+            .Map(dest => dest.itemName, src => src.Item.Name)
+            .Map(dest => dest.itemNameEn, src => src.Item.NameEn)
+            .Map(dest => dest.Code, src => src.Item.Code);
+
+        config.NewConfig<PRReturnDetail, InvoiceDetailResponseBase>()
+            .Map(dest => dest.BarCode, src => src.Item.BarCode)
+            .Map(dest => dest.itemName, src => src.Item.Name)
+            .Map(dest => dest.itemNameEn, src => src.Item.NameEn)
+            .Map(dest => dest.Code, src => src.Item.Code);
+            
 
         // Request 
         config.NewConfig<CreateSLInvoice, SLInvoice>();
-        config.NewConfig<CreateSLInvoiceDetail, SLInvoiceDetail>();
         config.NewConfig<CreateSLReturn, SLReturn>();
-        config.NewConfig<CreateSLReturnDetail, SLReturnDetail>();
         config.NewConfig<CreatePRInvoice, PRInvoice>();
-        config.NewConfig<CreatePRInvoiceDetail, PRInvoiceDetail>();
-        config.NewConfig<CreatePRReturn, PRReturn>();
-        config.NewConfig<CreatePRReturnDetail, PRReturnDetail>();
+        config.NewConfig<CreatePRReturn, PRReturn>()
+            .Map(dest => dest.ReturnDetails , src => src.InvoiceDetails);
+
+        config.NewConfig<CreateInvoiceDetailsBase, SLInvoiceDetail>();
+        config.NewConfig<CreateInvoiceDetailsBase, SLReturnDetail>();
+        config.NewConfig<CreateInvoiceDetailsBase, PRInvoiceDetail>();
+        config.NewConfig<CreateInvoiceDetailsBase, PRReturnDetail>();
+            
 
     }
 }

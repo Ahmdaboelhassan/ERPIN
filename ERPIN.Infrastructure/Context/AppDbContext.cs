@@ -49,6 +49,23 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole , int>
         modelBuilder.Ignore<IdentityUserLogin<int>>();
         modelBuilder.Ignore<IdentityUserToken<int>>();
         modelBuilder.Ignore<IdentityRoleClaim<int>>();
+
+        // Configure Soft Delete Global Query Filter
+        modelBuilder.Entity<PRInvoice>().HasQueryFilter(m => !m.IsDeleted);
+        modelBuilder.Entity<PRInvoiceDetail>().HasQueryFilter(m => !m.IsDeleted);
+        modelBuilder.Entity<PRReturn>().HasQueryFilter(m => !m.IsDeleted);
+        modelBuilder.Entity<PRReturnDetail>().HasQueryFilter(m => !m.IsDeleted);
+        modelBuilder.Entity<SLInvoice>().HasQueryFilter(m => !m.IsDeleted);
+        modelBuilder.Entity<SLInvoiceDetail>().HasQueryFilter(m => !m.IsDeleted);
+        modelBuilder.Entity<SLReturn>().HasQueryFilter(m => !m.IsDeleted);
+        modelBuilder.Entity<SLReturnDetail>().HasQueryFilter(m => !m.IsDeleted);
+        modelBuilder.Entity<Store>().HasQueryFilter(m => !m.IsDeleted);
+        modelBuilder.Entity<Item>().HasQueryFilter(m => !m.IsDeleted);
+        modelBuilder.Entity<Account>().HasQueryFilter(m => !m.IsDeleted);
+        modelBuilder.Entity<CostCenter>().HasQueryFilter(m => !m.IsDeleted);
+        modelBuilder.Entity<Drawer>().HasQueryFilter(m => !m.IsDeleted);
+
+
     }
 }
 

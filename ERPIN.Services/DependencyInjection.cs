@@ -1,5 +1,7 @@
 ﻿using ERPIN.Services.Config;
 using ERPIN.Services.Services.Auth;
+using ERPIN.Services.Services.INV;
+using ERPIN.Services.Services.Purchases;
 using ERPIN.Services.Services.Sales;
 using ERPIN.Services.Services.Shared;
 using Mapster;
@@ -26,6 +28,13 @@ public static class DependencyInjection
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ISLInvoiceService, SLInvoiceService>();
+        services.AddScoped<ISLReturnService, SLReturnService>();
+        services.AddScoped<IPRInvoiceService, PRInvoiceService>();
+        services.AddScoped<IPRReturnService, PRReturnService>();
+        services.AddScoped<ICustomersService, CustomersService>();
+        services.AddScoped<IVendorsServices, VendorsServices>();
+        services.AddScoped<IItemsService, ItemsService>();
+        services.AddScoped<IStoresService, StoresService>();
 
         return services;
     }

@@ -2,6 +2,7 @@
 using ERPIN.Domain.Entities.SL;
 using ERPIN.Domain.Enums;
 using ERPIN.Domain.IRepositories;
+using ERPIN.Services.DTOs.Bases;
 using ERPIN.Services.DTOs.Request;
 using ERPIN.Services.DTOs.Response;
 using ERPIN.Services.Extinctions;
@@ -9,18 +10,19 @@ using ERPIN.Services.Models;
 using ERPIN.Services.Services.Shared;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http;
-using UserAction = ERPIN.Domain.Enums.UserAction;
+
 
 namespace ERPIN.Services.Services.Sales;
 
 public interface ISLInvoiceService
 {
-    Task<ResultResponse<CreateSLInvoice>> NewInvoice();
+    Task<ResultResponse<SLInvoiceResponse>> NewInvoice();
     Task<ResultResponse<SLInvoiceResponse>> GetInvoice(int id);
     Task<ResultResponse<int>> CreateInvoice(CreateSLInvoice model);
     Task<ResultResponse<int>> EditInvoice(CreateSLInvoice model);
     Task<ResultResponse<int>> DeleteInvoice(int id);
     Task<ResultResponse<int>> GetNextCode();
+    Task<IEnumerable<SLInvoiceResponse>> GetAll(DateTime from, DateTime to);
 }
 
 public class SLInvoiceService : ISLInvoiceService
@@ -38,22 +40,45 @@ public class SLInvoiceService : ISLInvoiceService
         currentUserId = httpContext.HttpContext.GetUserId();
     }
 
-    public async Task<ResultResponse<CreateSLInvoice>> NewInvoice()
+    public async Task<IEnumerable<SLInvoiceResponse>> GetAll(DateTime from , DateTime to)
+    {
+       return  await _unitOfWork.SLInvoices
+            .SelectAll(m => m.CreatedAt.Date >= from.Date && m.CreatedAt.Date <= to.Date,
+            m => new SLInvoiceResponse
+            {
+                Id = m.Id,
+                Code = m.Code,
+                CreatedAt = m.CreatedAt,
+                Discount = m.Discount,
+                Paid = m.Paid,
+                Net = m.Net,
+                Remain = m.Remain,
+
+            });
+    }
+
+
+    public async Task<ResultResponse<SLInvoiceResponse>> NewInvoice()
     {
 
         var code = await GetNextCode();
+        var defaultStore = await _unitOfWork.Stores.GetFirst();
+        var defaultCustomer = await _unitOfWork.Customers.GetFirst();
 
-        var model = new CreateSLInvoice()
+        var model = new SLInvoiceResponse()
         {
             Code = code.Data,
-            InvoiceDetails = new List<CreateSLInvoiceDetail>()
+            StoreId = defaultStore?.Id,
+            CustomerId = defaultCustomer?.Id,
+            CreatedAt = DateTime.Now,
+            InvoiceDetails = new List<InvoiceDetailResponseBase>()
         };
 
         return Result.Success(model);
     }
     public async Task<ResultResponse<SLInvoiceResponse>> GetInvoice(int id)
     {
-        var invoice = await _unitOfWork.SLInvoices.Get(x => x.Id == id , "InvoiceDetails");
+        var invoice = await _unitOfWork.SLInvoices.Get(x => x.Id == id , "InvoiceDetails" , "InvoiceDetails.Item");
         if (invoice == null)
             return Result.Error<SLInvoiceResponse>("Invoice not found");
 
@@ -71,19 +96,10 @@ public class SLInvoiceService : ISLInvoiceService
         if (model.Paid > model.Net)
             return Result.Error<int>("Paid amount cannot be greater than total amount");
 
-        var defaultStore = await _unitOfWork.Stores.GetFirst();
-        var defaultCustomer = await _unitOfWork.Customers.GetFirst();
-
-        if (defaultStore == null || defaultCustomer == null)
-            return Result.Error<int>("No store or customer found, please create a store first");
-
         var invoice = _mapper.Map<SLInvoice>(model);
 
         invoice.CreatedBy = currentUserId;
         invoice.CreatedAt = DateTime.Now;
-        invoice.StoreId =  defaultStore.Id;
-        invoice.CustomerId = defaultCustomer.Id;
-
 
         // Create Item Store 
         await _unitOfWork.SLInvoices.AddAsync(invoice);

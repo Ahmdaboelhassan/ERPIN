@@ -1,7 +1,9 @@
 ﻿using ERPIN.Domain.Entities.INV;
 using ERPIN.Domain.Entities.PR;
+using ERPIN.Domain.Entities.SL;
 using ERPIN.Domain.Enums;
 using ERPIN.Domain.IRepositories;
+using ERPIN.Services.DTOs.Bases;
 using ERPIN.Services.DTOs.Request;
 using ERPIN.Services.DTOs.Response;
 using ERPIN.Services.Extinctions;
@@ -19,7 +21,8 @@ public interface IPRInvoiceService
     Task<ResultResponse<int>> EditInvoice(CreatePRInvoice model);
     Task<ResultResponse<PRInvoiceResponse>> GetInvoice(int id);
     Task<ResultResponse<int>> GetNextCode();
-    Task<ResultResponse<CreatePRInvoice>> NewInvoice();
+    Task<ResultResponse<PRInvoiceResponse>> NewInvoice();
+    Task<IEnumerable<PRInvoiceResponse>> GetAll(DateTime from, DateTime to);
 }
 
 public class PRInvoiceService : IPRInvoiceService
@@ -38,28 +41,48 @@ public class PRInvoiceService : IPRInvoiceService
         currentUserId = httpContext.HttpContext.GetUserId();
     }
 
-    public async Task<ResultResponse<CreatePRInvoice>> NewInvoice()
+    public async Task<ResultResponse<PRInvoiceResponse>> NewInvoice()
     {
-
+        var defaultStore = await _unitOfWork.Stores.GetFirst();
+        var defaultVendor = await _unitOfWork.Vendors.GetFirst();
         var code = await GetNextCode();
 
-        var model = new CreatePRInvoice()
+        var model = new PRInvoiceResponse()
         {
             Code = code.Data,
-            InvoiceDetails = new List<CreatePRInvoiceDetail>()
+            StoreId = defaultStore.Id,
+            VendorId = defaultVendor.Id,
+            CreatedAt = DateTime.Now,
+            InvoiceDetails = new List<InvoiceDetailResponseBase>()
         };
 
         return Result.Success(model);
     }
     public async Task<ResultResponse<PRInvoiceResponse>> GetInvoice(int id)
     {
-        var invoice = await _unitOfWork.PRInvoices.Get(x => x.Id == id, "InvoiceDetails");
+        var invoice = await _unitOfWork.PRInvoices.Get(x => x.Id == id, "InvoiceDetails", "InvoiceDetails.Item");
         if (invoice == null)
             return Result.Error<PRInvoiceResponse>("Invoice not found");
 
         var invoiceRes = _mapper.Map<PRInvoiceResponse>(invoice);
 
         return Result.Success(invoiceRes);
+    }
+    public async Task<IEnumerable<PRInvoiceResponse>> GetAll(DateTime from, DateTime to)
+    {
+        return await _unitOfWork.PRInvoices
+             .SelectAll(m => m.CreatedAt.Date >= from.Date && m.CreatedAt.Date <= to.Date,
+             m => new PRInvoiceResponse
+             {
+                 Id = m.Id,
+                 Code = m.Code,
+                 CreatedAt = m.CreatedAt,
+                 Discount = m.Discount,
+                 Paid = m.Paid,
+                 Net = m.Net,
+                 Remain = m.Remain,
+
+             });
     }
 
     public async Task<ResultResponse<int>> CreateInvoice(CreatePRInvoice model)
@@ -71,19 +94,10 @@ public class PRInvoiceService : IPRInvoiceService
         if (model.Paid > model.Net)
             return Result.Error<int>("Paid amount cannot be greater than total amount");
 
-        var defaultStore = await _unitOfWork.Stores.GetFirst();
-        var defaultVendor = await _unitOfWork.Vendors.GetFirst();
-
-        if (defaultStore == null || defaultVendor == null)
-            return Result.Error<int>("No store or customer found, please create a store first");
-
         var invoice = _mapper.Map<PRInvoice>(model);
 
         invoice.CreatedBy = currentUserId;
-        invoice.CreatedAt = DateTime.Now;
-        invoice.StoreId = defaultStore.Id;
-        invoice.VendorId = defaultVendor.Id;
-
+        invoice.CreatedAt = model.CreatedAt;
 
         // Create Item Store 
         await _unitOfWork.PRInvoices.AddAsync(invoice);

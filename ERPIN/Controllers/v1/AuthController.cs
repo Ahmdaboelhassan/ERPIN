@@ -24,7 +24,7 @@ public class AuthController : ControllerBase
         if (!result.IsSuccess)
             return BadRequest(result);
 
-        return Ok(result);
+        return Ok(result.Data);
     }
 
     [HttpPost("Register")]
@@ -34,7 +34,7 @@ public class AuthController : ControllerBase
         if (!result.IsSuccess)
             return BadRequest(result);
 
-        return Ok(result);
+        return Ok(result.Data);
     }
     
 

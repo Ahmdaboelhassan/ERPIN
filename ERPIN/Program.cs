@@ -20,6 +20,8 @@ builder.Services.AddApiVersioning(options =>
 // Add Modules
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddCors();
+
 builder.Services
     .AddDomainLayer(builder.Configuration)
     .AddInfrastructureLayer(builder.Configuration)
@@ -33,6 +35,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseCors(opt => opt.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
 
 app.MapControllers();
 

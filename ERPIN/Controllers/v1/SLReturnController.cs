@@ -38,6 +38,14 @@ public class SLReturnController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("GetAll")]
+    public async Task<IActionResult> GetAll(DateTime from, DateTime to)
+    {
+        var result = await _invoiceService.GetAll(from, to);
+        return Ok(result);
+    }
+    
+
     [HttpPost("Create")]
     public async Task<IActionResult> Create(CreateSLReturn model)
     {

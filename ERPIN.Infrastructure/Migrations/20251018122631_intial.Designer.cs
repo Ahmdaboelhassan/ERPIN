@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERPIN.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251017094738_intial")]
+    [Migration("20251018122631_intial")]
     partial class intial
     {
         /// <inheritdoc />
@@ -922,9 +922,6 @@ namespace ERPIN.Infrastructure.Migrations
                     b.Property<decimal>("Quantity")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("SLReturnId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
 
@@ -936,8 +933,6 @@ namespace ERPIN.Infrastructure.Migrations
                     b.HasIndex("InvoiceId");
 
                     b.HasIndex("ItemId");
-
-                    b.HasIndex("SLReturnId");
 
                     b.ToTable("SLInvoiceDetails", "SL");
                 });
@@ -1109,7 +1104,7 @@ namespace ERPIN.Infrastructure.Migrations
             modelBuilder.Entity("ERPIN.Domain.Entities.PR.PRInvoiceDetail", b =>
                 {
                     b.HasOne("ERPIN.Domain.Entities.PR.PRInvoice", "Invoice")
-                        .WithMany("invoiceDetails")
+                        .WithMany("InvoiceDetails")
                         .HasForeignKey("InvoiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1184,10 +1179,6 @@ namespace ERPIN.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ERPIN.Domain.Entities.SL.SLReturn", null)
-                        .WithMany("InvoiceDetails")
-                        .HasForeignKey("SLReturnId");
-
                     b.Navigation("Invoice");
 
                     b.Navigation("Item");
@@ -1213,7 +1204,7 @@ namespace ERPIN.Infrastructure.Migrations
             modelBuilder.Entity("ERPIN.Domain.Entities.SL.SLReturnDetail", b =>
                 {
                     b.HasOne("ERPIN.Domain.Entities.SL.SLReturn", "Invoice")
-                        .WithMany()
+                        .WithMany("InvoiceDetails")
                         .HasForeignKey("InvoiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1246,7 +1237,7 @@ namespace ERPIN.Infrastructure.Migrations
 
             modelBuilder.Entity("ERPIN.Domain.Entities.PR.PRInvoice", b =>
                 {
-                    b.Navigation("invoiceDetails");
+                    b.Navigation("InvoiceDetails");
                 });
 
             modelBuilder.Entity("ERPIN.Domain.Entities.PR.PRReturn", b =>

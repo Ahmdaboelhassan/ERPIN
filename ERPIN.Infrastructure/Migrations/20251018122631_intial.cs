@@ -557,7 +557,6 @@ namespace ERPIN.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SLReturnId = table.Column<int>(type: "int", nullable: true),
                     ItemId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     UnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -587,12 +586,6 @@ namespace ERPIN.Infrastructure.Migrations
                         principalTable: "SLInvoices",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_SLInvoiceDetails_SLReturns_SLReturnId",
-                        column: x => x.SLReturnId,
-                        principalSchema: "SL",
-                        principalTable: "SLReturns",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -738,12 +731,6 @@ namespace ERPIN.Infrastructure.Migrations
                 schema: "SL",
                 table: "SLInvoiceDetails",
                 column: "ItemId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SLInvoiceDetails_SLReturnId",
-                schema: "SL",
-                table: "SLInvoiceDetails",
-                column: "SLReturnId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SLInvoices_CustomerId",

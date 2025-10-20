@@ -2,6 +2,7 @@
 using ERPIN.Domain.Entities.SL;
 using ERPIN.Domain.Enums;
 using ERPIN.Domain.IRepositories;
+using ERPIN.Services.DTOs.Bases;
 using ERPIN.Services.DTOs.Request;
 using ERPIN.Services.DTOs.Response;
 using ERPIN.Services.Extinctions;
@@ -19,7 +20,8 @@ public interface ISLReturnService
     Task<ResultResponse<int>> EditInvoice(CreateSLReturn model);
     Task<ResultResponse<SLReturnResponse>> GetInvoice(int id);
     Task<ResultResponse<int>> GetNextCode();
-    Task<ResultResponse<CreateSLReturn>> NewInvoice();
+    Task<ResultResponse<SLReturnResponse>> NewInvoice();
+    Task<IEnumerable<SLReturnResponse>> GetAll(DateTime from, DateTime to);
 }
 
 public class SLReturnService : ISLReturnService
@@ -37,22 +39,45 @@ public class SLReturnService : ISLReturnService
         currentUserId = httpContext.HttpContext.GetUserId();
     }
 
-    public async Task<ResultResponse<CreateSLReturn>> NewInvoice()
+    public async Task<ResultResponse<SLReturnResponse>> NewInvoice()
     {
+        var defaultStore = await _unitOfWork.Stores.GetFirst();
+        var defaultCustomer = await _unitOfWork.Customers.GetFirst();
 
         var code = await GetNextCode();
 
-        var model = new CreateSLReturn()
+        var model = new SLReturnResponse()
         {
             Code = code.Data,
-            ReturnDetails = new List<CreateSLReturnDetail>()
+            CustomerId = defaultCustomer?.Id,   
+            StoreId = defaultStore?.Id,
+            CreatedAt = DateTime.Now,
+            InvoiceDetails = new List<InvoiceDetailResponseBase>()
         };
 
         return Result.Success(model);
     }
+
+    public async Task<IEnumerable<SLReturnResponse>> GetAll(DateTime from, DateTime to)
+    {
+        return await _unitOfWork.SLReturns
+             .SelectAll(m => m.CreatedAt.Date >= from.Date && m.CreatedAt.Date <= to.Date,
+             m => new SLReturnResponse
+             {
+                 Id = m.Id,
+                 Code = m.Code,
+                 CreatedAt = m.CreatedAt,
+                 Discount = m.Discount,
+                 Paid = m.Paid,
+                 Net = m.Net,
+                 Remain = m.Remain,
+
+             });
+    }
+
     public async Task<ResultResponse<SLReturnResponse>> GetInvoice(int id)
     {
-        var invoice = await _unitOfWork.SLReturns.Get(x => x.Id == id, "InvoiceDetails");
+        var invoice = await _unitOfWork.SLReturns.Get(x => x.Id == id,  "InvoiceDetails" , "InvoiceDetails.Item");
         if (invoice == null)
             return Result.Error<SLReturnResponse>("Invoice not found");
 
@@ -64,31 +89,24 @@ public class SLReturnService : ISLReturnService
     public async Task<ResultResponse<int>> CreateInvoice(CreateSLReturn model)
     {
         // Add Invoice Data 
-        if (model.ReturnDetails == null || model.ReturnDetails.Count == 0)
+        if (model.InvoiceDetails == null || model.InvoiceDetails.Count == 0)
             return Result.Error<int>("Invoice must have at least one item");
 
         if (model.Paid > model.Net)
             return Result.Error<int>("Paid amount cannot be greater than total amount");
 
-        var defaultStore = await _unitOfWork.Stores.GetFirst();
-        var defaultCustomer = await _unitOfWork.Customers.GetFirst();
-
-        if (defaultStore == null || defaultCustomer == null)
-            return Result.Error<int>("No store or customer found, please create a store first");
+      
 
         var invoice = _mapper.Map<SLReturn>(model);
 
         invoice.CreatedBy = currentUserId;
-        invoice.CreatedAt = DateTime.Now;
-        invoice.StoreId = defaultStore.Id;
-        invoice.CustomerId = defaultCustomer.Id;
-
+        invoice.CreatedAt = model.CreatedAt;
 
         // Create Item Store 
         await _unitOfWork.SLReturns.AddAsync(invoice);
         await _unitOfWork.SaveChangesAsync();
 
-        var itemStores = model.ReturnDetails
+        var itemStores = model.InvoiceDetails
             .Select(g => new ItemStore
             {
                 ItemId = g.ItemId,
@@ -122,7 +140,7 @@ public class SLReturnService : ISLReturnService
             return Result.Error<int>("Invoice not found");
 
         // Add Invoice Data 
-        if (model.ReturnDetails == null || model.ReturnDetails.Count == 0)
+        if (model.InvoiceDetails == null || model.InvoiceDetails.Count == 0)
             return Result.Error<int>("Invoice must have at least one item");
 
         if (model.Paid > model.Net)
@@ -148,7 +166,7 @@ public class SLReturnService : ISLReturnService
 
         _unitOfWork.ItemStores.DeleteRange(oldItemStore);
 
-        var itemStores = model.ReturnDetails
+        var itemStores = model.InvoiceDetails
             .Select(g => new ItemStore
             {
                 ItemId = g.ItemId,

@@ -26,6 +26,12 @@ public class PRReturnController : ControllerBase
 
         return Ok(result);
     }
+    [HttpGet("GetAll")]
+    public async Task<IActionResult> GetAll(DateTime from, DateTime to)
+    {
+        var result = await _invoiceService.GetAll(from, to);
+        return Ok(result);
+    }
 
     [HttpGet("Get/{id:int}")]
     public async Task<IActionResult> Get(int id)
